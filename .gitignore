@@ -1,3 +1,17 @@
+# yarn
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# turborepo
+.turbo
+build/**
+dist/**
+
 # Logs
 logs
 *.log
