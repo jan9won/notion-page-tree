@@ -20,5 +20,12 @@
 	},
 	"scripts": {
 		"postinstall": "husky install"
+	},
+	"lint-staged": {
+		"*.{js,jsx,ts,tsx,json,css}": [
+			"prettier --write",
+			"eslint --fix",
+			"git add"
+		]
 	}
 }

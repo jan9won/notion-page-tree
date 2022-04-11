@@ -1,5 +1,5 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-yarn prettier --write .
+yarn dlx lint-staged
 yarn turbo run lint test
