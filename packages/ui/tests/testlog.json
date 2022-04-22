@@ -1,0 +1,90 @@
+{
+	"numFailedTestSuites": 1,
+	"numFailedTests": 1,
+	"numPassedTestSuites": 2,
+	"numPassedTests": 2,
+	"numPendingTestSuites": 0,
+	"numPendingTests": 0,
+	"numRuntimeErrorTestSuites": 0,
+	"numTodoTests": 0,
+	"numTotalTestSuites": 3,
+	"numTotalTests": 3,
+	"openHandles": [],
+	"snapshot": {
+		"added": 0,
+		"didUpdate": false,
+		"failure": true,
+		"filesAdded": 0,
+		"filesRemoved": 0,
+		"filesRemovedList": [],
+		"filesUnmatched": 1,
+		"filesUpdated": 0,
+		"matched": 0,
+		"total": 1,
+		"unchecked": 0,
+		"uncheckedKeysByFile": [],
+		"unmatched": 1,
+		"updated": 0
+	},
+	"startTime": 1650537713107,
+	"success": false,
+	"testResults": [
+		{
+			"assertionResults": [
+				{
+					"ancestorTitles": [],
+					"failureMessages": [],
+					"fullName": "sample",
+					"location": null,
+					"status": "passed",
+					"title": "sample"
+				}
+			],
+			"endTime": 1650537713461,
+			"message": "",
+			"name": "/Users/jangwonsuh/Documents/GitHub/neolambda/packages/ui/src/redux/sample/__tests__/cat.test.ts",
+			"startTime": 1650537713227,
+			"status": "passed",
+			"summary": ""
+		},
+		{
+			"assertionResults": [
+				{
+					"ancestorTitles": [],
+					"failureMessages": [],
+					"fullName": "should return the initial state",
+					"location": null,
+					"status": "passed",
+					"title": "should return the initial state"
+				}
+			],
+			"endTime": 1650537713499,
+			"message": "",
+			"name": "/Users/jangwonsuh/Documents/GitHub/neolambda/packages/ui/src/redux/sample/__tests__/counter.test.ts",
+			"startTime": 1650537713228,
+			"status": "passed",
+			"summary": ""
+		},
+		{
+			"assertionResults": [
+				{
+					"ancestorTitles": [],
+					"failureMessages": [
+						"Error: \u001b[2mexpect(\u001b[22m\u001b[38;2;0;95;95m\u001b[48;2;215;255;255mreceived\u001b[49m\u001b[39m\u001b[2m).\u001b[22mtoMatchSnapshot\u001b[2m()\u001b[22m\n\nSnapshot name: `Counter.tsx 1`\n\n\u001b[38;2;128;0;128m\u001b[48;2;255;215;255m- Snapshot  -  3\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+ Received  + 41\u001b[49m\u001b[39m\n\n\u001b[33m@@ -1,17 +1,55 @@\u001b[39m\n\u001b[2m  Object {\u001b[22m\n\u001b[2m    \"asFragment\": [Function],\u001b[22m\n\u001b[2m    \"baseElement\": <body>\u001b[22m\n\u001b[2m      <div>\u001b[22m\n\u001b[2m        <div>\u001b[22m\n\u001b[38;2;128;0;128m\u001b[48;2;255;215;255m-         test-utils\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+         <button>\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+           -1\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+         </button>\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+         <span>\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+           0\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+         </span>\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+         <button>\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+           +1\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+         </button>\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+         <span>\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+           you clicked \u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+           0\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+            time\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+         </span>\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+         <button>\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+           reset (wait 2 sec with middleware)\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+         </button>\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+         <button>\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+           increase randomly with thunk\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+         </button>\u001b[49m\u001b[39m\n\u001b[2m        </div>\u001b[22m\n\u001b[2m      </div>\u001b[22m\n\u001b[2m    </body>,\u001b[22m\n\u001b[38;2;128;0;128m\u001b[48;2;255;215;255m-   \"container\": <div>\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+   \"container\": <div>\u001b[49m\u001b[39m\n\u001b[2m      <div>\u001b[22m\n\u001b[38;2;128;0;128m\u001b[48;2;255;215;255m-       test-utils\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+       <button>\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+         -1\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+       </button>\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+       <span>\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+         0\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+       </span>\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+       <button>\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+         +1\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+       </button>\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+       <span>\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+         you clicked \u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+         0\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+          time\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+       </span>\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+       <button>\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+         reset (wait 2 sec with middleware)\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+       </button>\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+       <button>\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+         increase randomly with thunk\u001b[49m\u001b[39m\n\u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+       </button>\u001b[49m\u001b[39m\n\u001b[2m      </div>\u001b[22m\n\u001b[2m    </div>,\u001b[22m\n\u001b[2m    \"debug\": [Function],\u001b[22m\n\u001b[2m    \"findAllByAltText\": [Function],\u001b[22m\n\u001b[2m    \"findAllByDisplayValue\": [Function],\u001b[22m\n    at Object.<anonymous> (/Users/jangwonsuh/Documents/GitHub/neolambda/packages/ui/src/components/Sample/__tests__/Counter.test.tsx:10:30)\n    at Promise.then.completed (/Users/jangwonsuh/Documents/GitHub/neolambda/node_modules/jest-circus/build/utils.js:391:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (/Users/jangwonsuh/Documents/GitHub/neolambda/node_modules/jest-circus/build/utils.js:316:10)\n    at _callCircusTest (/Users/jangwonsuh/Documents/GitHub/neolambda/node_modules/jest-circus/build/run.js:218:40)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)\n    at _runTest (/Users/jangwonsuh/Documents/GitHub/neolambda/node_modules/jest-circus/build/run.js:155:3)\n    at _runTestsForDescribeBlock (/Users/jangwonsuh/Documents/GitHub/neolambda/node_modules/jest-circus/build/run.js:66:9)\n    at run (/Users/jangwonsuh/Documents/GitHub/neolambda/node_modules/jest-circus/build/run.js:25:3)\n    at runAndTransformResultsToJestFormat (/Users/jangwonsuh/Documents/GitHub/neolambda/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:170:21)\n    at jestAdapter (/Users/jangwonsuh/Documents/GitHub/neolambda/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:82:19)\n    at runTestInternal (/Users/jangwonsuh/Documents/GitHub/neolambda/node_modules/jest-runner/build/runTest.js:389:16)\n    at runTest (/Users/jangwonsuh/Documents/GitHub/neolambda/node_modules/jest-runner/build/runTest.js:475:34)\n    at Object.worker (/Users/jangwonsuh/Documents/GitHub/neolambda/node_modules/jest-runner/build/testWorker.js:133:12)"
+					],
+					"fullName": "Counter.tsx",
+					"location": null,
+					"status": "failed",
+					"title": "Counter.tsx"
+				}
+			],
+			"endTime": 1650537713855,
+			"message": "\u001b[1m\u001b[31m  \u001b[1m● \u001b[22m\u001b[1mCounter.tsx\u001b[39m\u001b[22m\n\n    \u001b[2mexpect(\u001b[22m\u001b[38;2;0;95;95m\u001b[48;2;215;255;255mreceived\u001b[49m\u001b[39m\u001b[2m).\u001b[22mtoMatchSnapshot\u001b[2m()\u001b[22m\n\n    Snapshot name: `Counter.tsx 1`\n\n    \u001b[38;2;128;0;128m\u001b[48;2;255;215;255m- Snapshot  -  3\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+ Received  + 41\u001b[49m\u001b[39m\n\n    \u001b[33m@@ -1,17 +1,55 @@\u001b[39m\n    \u001b[2m  Object {\u001b[22m\n    \u001b[2m    \"asFragment\": [Function],\u001b[22m\n    \u001b[2m    \"baseElement\": <body>\u001b[22m\n    \u001b[2m      <div>\u001b[22m\n    \u001b[2m        <div>\u001b[22m\n    \u001b[38;2;128;0;128m\u001b[48;2;255;215;255m-         test-utils\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+         <button>\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+           -1\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+         </button>\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+         <span>\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+           0\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+         </span>\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+         <button>\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+           +1\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+         </button>\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+         <span>\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+           you clicked \u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+           0\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+            time\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+         </span>\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+         <button>\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+           reset (wait 2 sec with middleware)\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+         </button>\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+         <button>\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+           increase randomly with thunk\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+         </button>\u001b[49m\u001b[39m\n    \u001b[2m        </div>\u001b[22m\n    \u001b[2m      </div>\u001b[22m\n    \u001b[2m    </body>,\u001b[22m\n    \u001b[38;2;128;0;128m\u001b[48;2;255;215;255m-   \"container\": <div>\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+   \"container\": <div>\u001b[49m\u001b[39m\n    \u001b[2m      <div>\u001b[22m\n    \u001b[38;2;128;0;128m\u001b[48;2;255;215;255m-       test-utils\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+       <button>\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+         -1\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+       </button>\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+       <span>\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+         0\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+       </span>\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+       <button>\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+         +1\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+       </button>\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+       <span>\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+         you clicked \u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+         0\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+          time\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+       </span>\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+       <button>\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+         reset (wait 2 sec with middleware)\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+       </button>\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+       <button>\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+         increase randomly with thunk\u001b[49m\u001b[39m\n    \u001b[38;2;0;95;95m\u001b[48;2;215;255;255m+       </button>\u001b[49m\u001b[39m\n    \u001b[2m      </div>\u001b[22m\n    \u001b[2m    </div>,\u001b[22m\n    \u001b[2m    \"debug\": [Function],\u001b[22m\n    \u001b[2m    \"findAllByAltText\": [Function],\u001b[22m\n    \u001b[2m    \"findAllByDisplayValue\": [Function],\u001b[22m\n\u001b[2m\u001b[22m\n\u001b[2m    \u001b[0m \u001b[90m  8 |\u001b[39m\u001b[0m\u001b[22m\n\u001b[2m    \u001b[0m \u001b[90m  9 |\u001b[39m it(\u001b[32m'Counter.tsx'\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[0m\u001b[22m\n\u001b[2m    \u001b[0m\u001b[31m\u001b[1m>\u001b[22m\u001b[2m\u001b[39m\u001b[90m 10 |\u001b[39m \texpect(render(\u001b[33m<\u001b[39m\u001b[33mCounter\u001b[39m \u001b[33m/\u001b[39m\u001b[33m>\u001b[39m))\u001b[33m.\u001b[39mtoMatchSnapshot()\u001b[33m;\u001b[39m\u001b[0m\u001b[22m\n\u001b[2m    \u001b[0m \u001b[90m    |\u001b[39m \t                            \u001b[31m\u001b[1m^\u001b[22m\u001b[2m\u001b[39m\u001b[0m\u001b[22m\n\u001b[2m    \u001b[0m \u001b[90m 11 |\u001b[39m })\u001b[33m;\u001b[39m\u001b[0m\u001b[22m\n\u001b[2m    \u001b[0m \u001b[90m 12 |\u001b[39m\u001b[0m\u001b[22m\n\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat Object.<anonymous> (\u001b[22m\u001b[2m\u001b[0m\u001b[36msrc/components/Sample/__tests__/Counter.test.tsx\u001b[39m\u001b[0m\u001b[2m:10:30)\u001b[22m\u001b[2m\u001b[22m\n",
+			"name": "/Users/jangwonsuh/Documents/GitHub/neolambda/packages/ui/src/components/Sample/__tests__/Counter.test.tsx",
+			"startTime": 1650537713424,
+			"status": "failed",
+			"summary": ""
+		}
+	],
+	"wasInterrupted": false
+}

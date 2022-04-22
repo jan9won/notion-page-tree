@@ -2,12 +2,21 @@
 	"name": "ui",
 	"scripts": {
 		"dev": "webpack serve --config webpack.dev.js",
+		"test": "jest ./src --maxWorkers 2",
+		"test:watch": "yarn test -- --watch",
+		"test:json": "yarn test -- --json --outputFile=./tests/testlog.json",
 		"build": "webpack --config webpack.prod.js",
 		"analyze": "webpack --profile --json > stats.json && npx webpack-bundle-analyzer stats.json"
 	},
 	"dependencies": {
+		"@reduxjs/toolkit": "^1.8.1",
+		"core-js": "^3.22.0",
 		"react": "^18.0.0",
-		"react-dom": "^18.0.0"
+		"react-dom": "^18.0.0",
+		"react-redux": "^7.2.8",
+		"redux-observable": "^2.0.0",
+		"redux-saga": "^1.1.3",
+		"redux-thunk": "^2.4.1"
 	},
 	"devDependencies": {
 		"@babel/cli": "^7.17.6",
@@ -15,12 +24,20 @@
 		"@babel/preset-env": "^7.16.11",
 		"@babel/preset-react": "^7.16.7",
 		"@babel/preset-typescript": "^7.16.7",
+		"@testing-library/react": "^13.1.1",
+		"@types/jest": "^27.4.1",
 		"@types/react": "^18.0.0",
 		"@types/react-dom": "^18.0.0",
+		"babel-jest": "^27.5.1",
 		"babel-loader": "^8.2.4",
+		"cross-fetch": "^3.1.5",
 		"css-loader": "^6.7.1",
 		"html-webpack-plugin": "^5.5.0",
+		"jest": "^27.5.1",
+		"msw": "^0.39.2",
+		"redux-devtools-extension": "^2.13.9",
 		"style-loader": "^3.3.1",
+		"ts-node": "^10.7.0",
 		"url-loader": "^4.1.1",
 		"webpack": "^5.72.0",
 		"webpack-bundle-analyser": "^1.4.0",

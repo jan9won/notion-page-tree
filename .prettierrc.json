@@ -6,6 +6,6 @@
 	"tabWidth": 2,
 	"bracketSpacing": true,
 	"bracketSameLine": false,
-	"arrowParens": "always",
+	"arrowParens": "avoid",
 	"trailingComma": "none"
 }

@@ -7,14 +7,13 @@ module.exports = {
 
 	// I.O. CONFIGURATION
 	entry: {
-		index: './index.tsx',
-		test: './src/test.ts'
+		index: './index.tsx'
 	},
 	output: {
 		path: path.resolve(__dirname, 'dist'),
 		clean: true,
 		filename: '[name].[contenthash].bundle.js',
-		chunkFilename: (pathData) => {
+		chunkFilename: pathData => {
 			return pathData.chunk.name === 'index'
 				? '[name].[contenthash].bundle.js'
 				: '[name]/[name].[contenthash].bundle.js';
@@ -33,8 +32,14 @@ module.exports = {
 	module: {
 		rules: [
 			{
-				test: /\.(js|ts)x?/,
+				test: /\.m?(j|t)sx?$/,
 				// match modules with regex
+				// exclude: /node_modules/,
+				include: {
+					not: /node_modules/
+					// and: /some-package/
+				},
+				// exclude node_modules, transpiling packages will cause problems
 				loader: 'babel-loader'
 				// loader to process this module
 			},
