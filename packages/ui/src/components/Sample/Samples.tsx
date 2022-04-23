@@ -1,12 +1,12 @@
 import React from 'react';
 import Counter from '../../components/Sample/Counter';
 import Images from '../../components/Sample/Images';
-import Sagas from './CatGallery';
+import CatGallery from './CatGallery';
 
 const Samples = () => {
 	return (
 		<div>
-			<Sagas></Sagas>
+			<CatGallery></CatGallery>
 			<Counter></Counter>
 			<Images></Images>
 		</div>

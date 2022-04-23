@@ -1,3 +1,23 @@
 {
-	"name": "notion-server"
+	"name": "notion-server",
+	"scripts": {
+		"dev": "ts-node ./src/index.ts",
+		"test": "jest ./src",
+		"test:watch": "yarn test --watch",
+		"test:debug": "yarn test --debug --json --outputFile=./tests/testlog.json",
+		"build": "tsc --project ./"
+	},
+	"dependencies": {
+		"@notionhq/client": "^1.0.4",
+		"dotenv": "^16.0.0"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.17.9",
+		"@babel/preset-env": "^7.16.11",
+		"@babel/preset-typescript": "^7.16.7",
+		"babel-jest": "^27.5.1",
+		"jest": "^27.5.1",
+		"ts-node": "^10.7.0",
+		"typescript": "^4.6.3"
+	}
 }

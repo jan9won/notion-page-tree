@@ -2,7 +2,7 @@ import React from 'react';
 import { useAppDispatch, useAppSelector } from '../../redux/sample/store';
 import { fetchRequested } from '../../redux/sample/catSlice';
 
-const Sagas = () => {
+const CatGallery = () => {
 	const dispatch = useAppDispatch();
 	const cat = useAppSelector(store => store.cat);
 	return (
@@ -30,4 +30,4 @@ const Sagas = () => {
 		</>
 	);
 };
-export default Sagas;
+export default CatGallery;

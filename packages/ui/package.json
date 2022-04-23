@@ -3,8 +3,8 @@
 	"scripts": {
 		"dev": "webpack serve --config webpack.dev.js",
 		"test": "jest ./src --maxWorkers 2",
-		"test:watch": "yarn test -- --watch",
-		"test:json": "yarn test -- --json --outputFile=./tests/testlog.json",
+		"test:watch": "yarn test --watch",
+		"test:debug": "yarn test --debug --json --outputFile=./tests/testlog.json",
 		"build": "webpack --config webpack.prod.js",
 		"analyze": "webpack --profile --json > stats.json && npx webpack-bundle-analyzer stats.json"
 	},
