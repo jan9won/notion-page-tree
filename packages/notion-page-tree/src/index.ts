@@ -14,11 +14,11 @@ async function main() {
 
 		// write to local files
 		await writeFile(
-			path.resolve('./src/fetcher/tree.json'),
+			path.resolve('./src/private/tree.json'),
 			JSON.stringify(fetcher.root)
 		);
 		await writeFile(
-			path.resolve('./src/fetcher/collection.json'),
+			path.resolve('./src/private/collection.json'),
 			JSON.stringify(fetcher.page_collection)
 		);
 
