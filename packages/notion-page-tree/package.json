@@ -1,15 +1,19 @@
 {
-	"name": "notion-server",
+	"name": "notion-page-tree",
 	"scripts": {
 		"dev": "ts-node ./src/index.ts",
-		"test": "jest ./src",
+		"test": "jest ./src --forceExit",
 		"test:watch": "yarn test --watch",
 		"test:debug": "yarn test --debug --json --outputFile=./tests/testlog.json",
 		"build": "tsc --project ./"
 	},
 	"dependencies": {
 		"@notionhq/client": "^1.0.4",
-		"dotenv": "^16.0.0"
+		"@types/dotenv": "^8.2.0",
+		"@types/lunr": "^2.3.4",
+		"dotenv": "^16.0.0",
+		"enquirer": "^2.3.6",
+		"lunr": "^2.3.9"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.17.9",
@@ -17,6 +21,7 @@
 		"@babel/preset-typescript": "^7.16.7",
 		"babel-jest": "^27.5.1",
 		"jest": "^27.5.1",
+		"object-sizeof": "^1.6.3",
 		"ts-node": "^10.7.0",
 		"typescript": "^4.6.3"
 	}

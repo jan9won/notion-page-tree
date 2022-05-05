@@ -1,12 +1,19 @@
-import { BlockObjectResponse, RichTextItemResponse } from '../';
+import { GetBlockResponseWithMetadata } from '../types';
 
-const flattenRichText = (richTextItemResponse: RichTextItemResponse[]) =>
+export type RichTextItemResponse = Extract<
+	GetBlockResponseWithMetadata,
+	{ type: 'paragraph' }
+>['paragraph']['rich_text'][0];
+
+export const flattenRichText = (richTextItemResponse: RichTextItemResponse[]) =>
 	richTextItemResponse.reduce(
-		(flatText, richTextObject) => `${flatText} ${richTextObject.plain_text}`,
+		(flatText, richTextObject) => `${flatText} ${richTextObject.plain_text} `,
 		''
 	);
 
-export const extractRichTextFromBlock = (block: BlockObjectResponse) => {
+export const extractPlainTextFromBlock = (
+	block: GetBlockResponseWithMetadata
+) => {
 	switch (block.type) {
 		case 'audio':
 			return flattenRichText(block.audio.caption);

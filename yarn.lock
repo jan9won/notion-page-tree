@@ -2116,6 +2116,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/dotenv@npm:^8.2.0":
+  version: 8.2.0
+  resolution: "@types/dotenv@npm:8.2.0"
+  dependencies:
+    dotenv: "*"
+  checksum: a1f524da7dc18b09bdb6c2613b9abbbe8ca575621cce4625efc7f98daf2ba07c7dbab622c9bb394507a12c5c515f9cbbbba4aeec17b801c88faeb8e8e656d460
+  languageName: node
+  linkType: hard
+
 "@types/eslint-scope@npm:^3.7.3":
   version: 3.7.3
   resolution: "@types/eslint-scope@npm:3.7.3"
@@ -2266,6 +2275,13 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: e009a2bfb50e90ca9b7c6e8f648f8464067271fd99116f881073fa6fa76dc8d0133181dd65e6614d5fb1220d671d67b0124aef7d97dc02d7e342ab143a47779d
+  languageName: node
+  linkType: hard
+
+"@types/lunr@npm:^2.3.4":
+  version: 2.3.4
+  resolution: "@types/lunr@npm:2.3.4"
+  checksum: 251dfefec4a24831999b052968f93b0f2066992554a1ff5ea3c6f7a581691b26e03d9d892293d2042bbf48dd9885c8f706e52e63ec2258878547c86b7283618e
   languageName: node
   linkType: hard
 
@@ -3220,6 +3236,13 @@ __metadata:
   version: 3.2.4
   resolution: "ansi-colors@npm:3.2.4"
   checksum: 026c51880e9f8eb59b112669a87dbea4469939ff94b131606303bbd697438a6691b16b9db3027aa9bf132a244214e83ab1508b998496a34d2aea5b437ac9e62d
+  languageName: node
+  linkType: hard
+
+"ansi-colors@npm:^4.1.1":
+  version: 4.1.1
+  resolution: "ansi-colors@npm:4.1.1"
+  checksum: 138d04a51076cb085da0a7e2d000c5c0bb09f6e772ed5c65c53cb118d37f6c5f1637506d7155fb5f330f0abcf6f12fa2e489ac3f8cdab9da393bf1bb4f9a32b0
   languageName: node
   linkType: hard
 
@@ -5017,7 +5040,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"buffer@npm:^5.5.0":
+"buffer@npm:^5.5.0, buffer@npm:^5.6.0":
   version: 5.7.1
   resolution: "buffer@npm:5.7.1"
   dependencies:
@@ -6901,7 +6924,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv@npm:^16.0.0":
+"dotenv@npm:*, dotenv@npm:^16.0.0":
   version: 16.0.0
   resolution: "dotenv@npm:16.0.0"
   checksum: 664cebb51f0a9a1d1b930f51f0271e72e26d62feaecc9dc03df39453dd494b4e724809ca480fb3ec3213382b1ed3f791aaeb83569a137f9329ce58efd4853dbf
@@ -7087,6 +7110,15 @@ __metadata:
     graceful-fs: ^4.2.4
     tapable: ^2.2.0
   checksum: 792b7a01abb4ee4433b658c71f92d5948675938e0c03cad1732abe843b87395f15cb880ace4f819f78ead94163278283afc79b8be63c0eddca8ab45f7d8c515d
+  languageName: node
+  linkType: hard
+
+"enquirer@npm:^2.3.6":
+  version: 2.3.6
+  resolution: "enquirer@npm:2.3.6"
+  dependencies:
+    ansi-colors: ^4.1.1
+  checksum: 1c0911e14a6f8d26721c91e01db06092a5f7675159f0261d69c403396a385afd13dd76825e7678f66daffa930cfaa8d45f506fb35f818a2788463d022af1b884
   languageName: node
   linkType: hard
 
@@ -11511,6 +11543,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lunr@npm:^2.3.9":
+  version: 2.3.9
+  resolution: "lunr@npm:2.3.9"
+  checksum: 176719e24fcce7d3cf1baccce9dd5633cd8bdc1f41ebe6a180112e5ee99d80373fe2454f5d4624d437e5a8319698ca6837b9950566e15d2cae5f2a543a3db4b8
+  languageName: node
+  linkType: hard
+
 "lz-string@npm:^1.4.4":
   version: 1.4.4
   resolution: "lz-string@npm:1.4.4"
@@ -12286,6 +12325,7 @@ __metadata:
     eslint-plugin-react: latest
     husky: ^7.0.0
     prettier: 2.6.2
+    ts-node: ^10.7.0
     turbo: ^1.2.1
     typescript: ^4.6.3
     webpack-bundle-analyzer: ^4.5.0
@@ -12497,17 +12537,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"notion-server@workspace:packages/notion-server":
+"notion-page-tree@workspace:packages/notion-page-tree":
   version: 0.0.0-use.local
-  resolution: "notion-server@workspace:packages/notion-server"
+  resolution: "notion-page-tree@workspace:packages/notion-page-tree"
   dependencies:
     "@babel/core": ^7.17.9
     "@babel/preset-env": ^7.16.11
     "@babel/preset-typescript": ^7.16.7
     "@notionhq/client": ^1.0.4
+    "@types/dotenv": ^8.2.0
+    "@types/lunr": ^2.3.4
     babel-jest: ^27.5.1
     dotenv: ^16.0.0
+    enquirer: ^2.3.6
     jest: ^27.5.1
+    lunr: ^2.3.9
+    object-sizeof: ^1.6.3
     ts-node: ^10.7.0
     typescript: ^4.6.3
   languageName: unknown
@@ -12626,6 +12671,15 @@ __metadata:
   version: 1.1.1
   resolution: "object-keys@npm:1.1.1"
   checksum: b363c5e7644b1e1b04aa507e88dcb8e3a2f52b6ffd0ea801e4c7a62d5aa559affe21c55a07fd4b1fd55fc03a33c610d73426664b20032405d7b92a1414c34d6a
+  languageName: node
+  linkType: hard
+
+"object-sizeof@npm:^1.6.3":
+  version: 1.6.3
+  resolution: "object-sizeof@npm:1.6.3"
+  dependencies:
+    buffer: ^5.6.0
+  checksum: a1195e0e0caa80504e7ff20da54c73b4ed57c1f36482743436c7014c615bdc1528f3751e928bb9efa6f1960cd7f039aeb44b19f9dda63686b9995e1bbe4538af
   languageName: node
   linkType: hard
 

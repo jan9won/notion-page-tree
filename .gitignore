@@ -1,3 +1,7 @@
+# personal
+private/
+.DS_Store
+
 # yarn
 .yarn/*
 !.yarn/cache

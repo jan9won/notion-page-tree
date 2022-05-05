@@ -3,6 +3,7 @@
 		"*.env": "properties"
 	},
 	"files.exclude": {
+		"**/.yarn/cache/*": true,
 		"**/node_modules/*": true
 	}
 }
