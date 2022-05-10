@@ -1,15 +1,16 @@
-export type QueryablePromise<T> = Promise<T> & queryablePromiseProperties<T>;
+export type QueryablePromise<T, E> = Promise<T> &
+	queryablePromiseProperties<T, E>;
 
-interface queryablePromiseProperties<T> {
+interface queryablePromiseProperties<T, E> {
 	isPending: () => boolean;
 	isRejected: () => boolean;
 	isFulfilled: () => boolean;
 	getResolvedValue: () => T;
-	getRejectedValue: () => string;
+	getRejectedValue: () => E;
 	getPayloadValue: () => unknown;
 }
 
-export function makeQueryablePromise<T>(
+export function makeQueryablePromise<T, E>(
 	promise: Promise<T>,
 	payload?: unknown
 ) {
@@ -21,7 +22,7 @@ export function makeQueryablePromise<T>(
 	let isRejected = false;
 	let isFulfilled = false;
 	let resolvedValue: T;
-	let rejectedValue: string;
+	let rejectedValue: E;
 	const payloadValue = payload;
 
 	// Observe the promise, saving the fulfillment in a closure scope.
@@ -32,12 +33,12 @@ export function makeQueryablePromise<T>(
 			resolvedValue = v;
 			return v;
 		})
-		.catch((e: string) => {
+		.catch(e => {
 			isRejected = true;
 			isPending = false;
 			rejectedValue = e;
-			return e;
-		}) as QueryablePromise<T>;
+			return e.code;
+		}) as QueryablePromise<T, E>;
 
 	result.isFulfilled = () => {
 		return isFulfilled;

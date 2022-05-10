@@ -5,7 +5,8 @@
 		"test": "jest ./src --forceExit",
 		"test:watch": "yarn test --watch",
 		"test:debug": "yarn test --debug --json --outputFile=./tests/testlog.json",
-		"build": "tsc --project ./"
+		"build": "tsc --project ./src/",
+		"serve": "ts-node ./src/index.ts"
 	},
 	"dependencies": {
 		"@notionhq/client": "^1.0.4",

@@ -1,4 +1,4 @@
-import { GetBlockResponseWithMetadata } from '../types';
+import { GetBlockResponseWithMetadata } from '../../types';
 
 export type RichTextItemResponse = Extract<
 	GetBlockResponseWithMetadata,

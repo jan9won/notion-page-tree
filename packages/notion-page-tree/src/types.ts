@@ -4,7 +4,7 @@ import {
 	GetBlockResponse,
 	QueryDatabaseResponse
 } from '@notionhq/client/build/src/api-endpoints';
-import { createRequestParameters } from './fetcher';
+import { createRequestParameters } from './fetcher/utils';
 
 // Arguments for every API request
 export type RequestParameters = Awaited<
@@ -12,8 +12,8 @@ export type RequestParameters = Awaited<
 >;
 
 // Plain page without recursive reference link.
-export type PlainEntity = PlainCommons & (Page | Database | Block);
-export interface PlainCommons {
+export type FlatEntity = FlatCommons & (Page | Database | Block);
+export interface FlatCommons {
 	id: string;
 	depth: number;
 	blockContentPlainText: string;

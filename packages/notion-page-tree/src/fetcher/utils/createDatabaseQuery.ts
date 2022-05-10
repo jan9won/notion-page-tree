@@ -8,7 +8,7 @@ export const asSortsCollection = <T extends Record<string, SortsType>>(
 ) => arg;
 // const asSortsCollection = <T>(arg: Record<keyof T,SortsType>) => arg;
 
-export const filters = asFilterCollection({
+export const myFilters = asFilterCollection({
 	isPublished: {
 		property: 'isPublished',
 		checkbox: {
@@ -23,7 +23,7 @@ export const filters = asFilterCollection({
 	}
 });
 
-export const sorts = asSortsCollection({
+export const mySorts = asSortsCollection({
 	curationName: [
 		{
 			property: 'curation',

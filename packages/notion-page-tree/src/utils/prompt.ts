@@ -37,3 +37,15 @@ export const askYesOrNo = async (message: string) =>
 			}
 		])
 	).confirm;
+
+export const askSelect = async (answers: string[], message: string) =>
+	(
+		await prompt<{ answer: string }>([
+			{
+				type: 'select',
+				name: 'answer',
+				choices: answers,
+				message: message
+			}
+		])
+	).answer;
