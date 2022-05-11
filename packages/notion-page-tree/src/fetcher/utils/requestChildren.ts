@@ -5,7 +5,7 @@ import {
 	GetBlockResponseWithMetadata
 } from '../../types';
 
-export const createChildrenRequest = (
+const createChildrenRequest = (
 	parent: Entity,
 	requestParameters: RequestParameters,
 	databaseQueryFilter: QueryDatabaseParameters['filter']
@@ -14,7 +14,8 @@ export const createChildrenRequest = (
 		? queryDatabaseAll({
 				RequestParameters: {
 					...requestParameters,
-					entry_id: parent.id
+					entry_id: parent.id,
+					entry_type: 'database'
 				},
 				parent,
 				filter: databaseQueryFilter
@@ -22,7 +23,8 @@ export const createChildrenRequest = (
 		: getBlockChildrenAll({
 				RequestParameters: {
 					...requestParameters,
-					entry_id: parent.id
+					entry_id: parent.id,
+					entry_type: 'block'
 				},
 				parent
 		  });
@@ -39,7 +41,7 @@ interface queryDatabaseAllParameters {
  * Get all entities (with properties) from the database.
  */
 const queryDatabaseAll = async ({
-	RequestParameters: { entry_id, entry_key, client, entry_type },
+	RequestParameters: { entry_id, entry_key, entry_type, client },
 	parent,
 	filter,
 	_entity_list = [],
@@ -89,7 +91,7 @@ interface getBlockChildrenAllParameters {
  * Get all entities (with properties) from the database.
  */
 export const getBlockChildrenAll = async ({
-	RequestParameters: { entry_id, entry_key, client, entry_type },
+	RequestParameters: { entry_id, entry_key, entry_type, client },
 	parent,
 	_entity_list = [],
 	_cursor = undefined
@@ -138,3 +140,5 @@ const normalizeBlockType = (
 			: 'block';
 	return type;
 };
+
+export default createChildrenRequest;

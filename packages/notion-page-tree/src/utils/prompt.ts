@@ -38,9 +38,9 @@ export const askYesOrNo = async (message: string) =>
 		])
 	).confirm;
 
-export const askSelect = async (answers: string[], message: string) =>
+export const askSelect = async <T>(answers: string[], message: string) =>
 	(
-		await prompt<{ answer: string }>([
+		await prompt<{ answer: T }>([
 			{
 				type: 'select',
 				name: 'answer',

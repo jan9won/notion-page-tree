@@ -4,7 +4,7 @@ import { extractPlainTextFromBlock, blocksWithoutChildren } from './utils';
 import { makeQueryablePromise, QueryablePromise } from '../utils';
 import { EOL } from 'os';
 import { flattenEntity } from './utils/flattenEntity';
-import { createChildrenRequest } from './utils/createChildrenRequest';
+import requestChildren from './utils/requestChildren';
 import { QueryDatabaseParameters } from '@notionhq/client/build/src/api-endpoints';
 
 interface fetchPagesRecursivelyProperties {
@@ -90,7 +90,7 @@ export const createFetchQueue = ({
 				parentToAssign: request.parentToAssign,
 				parentToRequest: request.parentToRequest,
 				children: makeQueryablePromise<Entity[], NotionClientError>(
-					createChildrenRequest(
+					requestChildren(
 						request.parentToRequest,
 						requestParameters,
 						databaseQueryFilter

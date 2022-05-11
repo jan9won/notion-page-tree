@@ -1,5 +1,5 @@
 export * from './blocksWithoutChildren';
-export * from './createChildrenRequest';
+export * from './requestChildren';
 export * from './createDatabaseQuery';
 export * from './createRequestParameters';
 export * from './extractPlainTextFromBlock';

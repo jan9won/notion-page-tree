@@ -11,6 +11,13 @@ interface createRequestParametersParameters {
 	forceRewrite?: boolean;
 }
 
+interface createRequestParametersReturnType {
+	entry_id: string;
+	entry_key: string;
+	entry_type: 'page' | 'database' | 'block';
+	client: Client;
+}
+
 export type RequestParameters = Awaited<
 	ReturnType<typeof createRequestParameters>
 >;
@@ -18,7 +25,7 @@ export type RequestParameters = Awaited<
 export const createRequestParameters = async ({
 	prompt = false,
 	forceRewrite = false
-}: createRequestParametersParameters) => {
+}: createRequestParametersParameters): Promise<createRequestParametersReturnType> => {
 	// Try to set local .env file.
 	const envFilePath = resolve('.env');
 	const envFile = config({ path: envFilePath, override: true }).parsed;
@@ -26,7 +33,10 @@ export const createRequestParameters = async ({
 	// Try to read from process.env.
 	let NOTION_ENTRY_ID = process.env.NOTION_ENTRY_ID;
 	let NOTION_ENTRY_KEY = process.env.NOTION_ENTRY_KEY;
-	let NOTION_ENTRY_TYPE = process.env.NOTION_ENTRY_TYPE;
+	let NOTION_ENTRY_TYPE = process.env.NOTION_ENTRY_TYPE as
+		| 'page'
+		| 'database'
+		| 'block';
 
 	// If some env does not exist and prompt option is true, or forceRewrite is set to true, ask for user input.
 	if (
@@ -81,7 +91,9 @@ export const createRequestParameters = async ({
 	}
 };
 
-export const appendToDotEnv = async (
+// Utils
+
+const appendToDotEnv = async (
 	envFilePath: string,
 	newEnv: DotenvParseOutput,
 	envFile?: DotenvParseOutput
