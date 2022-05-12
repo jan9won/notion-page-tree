@@ -1,12 +1,14 @@
 {
 	"name": "notion-page-tree",
 	"version": "0.0.0",
+	"main": "./dist/index.js",
 	"scripts": {
 		"dev": "ts-node ./src/index.ts",
 		"test": "jest ./src --forceExit",
 		"test:watch": "yarn test --watch",
 		"test:debug": "yarn test --debug --json --outputFile=./tests/testlog.json",
 		"serve": "ts-node sample/index.ts",
+		"build": "tsc -p tsconfig.json",
 		"publish": "yarn npm publish"
 	},
 	"dependencies": {
