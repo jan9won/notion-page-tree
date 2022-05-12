@@ -1,9 +1,23 @@
 {
-	"name": "neolambda",
-	"packageManager": "yarn@3.2.0",
 	"private": true,
+	"packageManager": "yarn@3.2.0",
+	"homepage": "https://github.com/jan9won/notion-page-tree/#readme",
+	"description": "Recursively fetch nested Notion pages from the root page/database/block node.",
+	"author": {
+		"name": "Jangwon Suh",
+		"email": "jan9won@gmail.com"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/jan9won/notion-page-tree",
+		"directory": "packages/notion-page-tree"
+	},
+	"engines": {
+		"node": ">=12"
+	},
 	"workspaces": [
-		"packages/*"
+		"packages/notion-page-tree",
+		"packages/ui"
 	],
 	"devDependencies": {
 		"@typescript-eslint/eslint-plugin": "latest",

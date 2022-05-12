@@ -7,16 +7,17 @@ import { type createFetchQueueReturnType } from '../fetcher';
 import { type Entity } from '../types';
 import type lunr from 'lunr';
 const app = express();
-const PORT = 8888;
 
 interface setupServerParameters {
-	page_collection: createFetchQueueReturnType['page_collection'];
-	root: Entity;
-	search_index: lunr.Index;
-	search_suggestion: string[];
+	port: number;
+	page_collection: createFetchQueueReturnType['page_collection'] | undefined;
+	root: Entity | undefined;
+	search_index: lunr.Index | undefined;
+	search_suggestion: string[] | undefined;
 }
 
 export const setupServer = ({
+	port,
 	page_collection,
 	root,
 	search_index,
@@ -27,5 +28,5 @@ export const setupServer = ({
 	searchServerHandler(app, search_index);
 	suggestionServerHandler(app, search_suggestion);
 
-	app.listen(PORT, () => console.log(`app listening ${PORT}`));
+	return app.listen(port, () => console.log(`app listening ${[port]}`));
 };

@@ -64,8 +64,3 @@ export interface Block {
 	type: 'block';
 	metadata: GetBlockResponseWithMetadata;
 }
-
-// // Arguments for every API request
-// export type RequestParameters = Awaited<
-// 	ReturnType<typeof createRequestParameters>
-// >;

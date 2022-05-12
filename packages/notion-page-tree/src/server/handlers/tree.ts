@@ -3,14 +3,15 @@ import { createFetchQueueReturnType } from '../../fetcher';
 import { convertNotionId } from '../utils/convertNotionId';
 export const treeServerHandler = (
 	router: Router,
-	root: createFetchQueueReturnType['rootEntity']
+	root: createFetchQueueReturnType['rootEntity'] | undefined
 ) => {
 	router.get<{ id: string }>('/tree/:id', (req, res) => {
-		!root && res.sendStatus(503);
 		const convertedId = convertNotionId(req.params.id, 'dashed');
-		!req.params.id || convertedId === false
-			? res.sendStatus(502)
-			: res.send(JSON.stringify(findSubtreeRecursively(root, convertedId)));
+		root
+			? req.params.id && convertedId !== false
+				? res.send(JSON.stringify(findSubtreeRecursively(root, convertedId)))
+				: res.sendStatus(502)
+			: res.sendStatus(503);
 	});
 };
 

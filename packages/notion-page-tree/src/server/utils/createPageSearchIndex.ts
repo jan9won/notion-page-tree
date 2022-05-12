@@ -1,7 +1,6 @@
 import lunr from 'lunr';
 import { createFetchQueueWatcher } from '../../fetcher';
 import { extractPlainTextFromPageProperty } from '../../fetcher/utils/extractPlainTextFromPageProperty';
-import { writeFile } from 'fs/promises';
 
 export const createPageSearchIndex = (
 	page_collection: Awaited<
@@ -40,19 +39,12 @@ export const createPageSearchIndex = (
 				});
 		});
 	});
-	writeFile(
-		'./src/private/search-suggestion.json',
-		JSON.stringify(
-			JSON.parse(JSON.stringify(idx.toJSON())).invertedIndex.map(
-				(tokenSet: [string, unknown]) => tokenSet[0]
-			)
-		)
-	);
+
 	return {
 		idx: idx,
 		tkn: JSON.parse(JSON.stringify(idx.toJSON())).invertedIndex.map(
 			(tokenSet: [string, unknown]) => tokenSet[0]
-		)
+		) as string[]
 	};
 };
 

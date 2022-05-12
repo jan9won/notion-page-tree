@@ -1,7 +1,7 @@
 import { type Router, type Request } from 'express';
 export const suggestionServerHandler = (
 	app: Router,
-	search_suggestion: string[]
+	search_suggestion: string[] | undefined
 ) => {
 	// app.get(
 	// 	'/suggestion',
@@ -19,7 +19,8 @@ export const suggestionServerHandler = (
 	// 	}
 	// );
 	app.get('/suggestion', (req, res) => {
-		!search_suggestion && res.sendStatus(503);
-		res.send(JSON.stringify(search_suggestion));
+		search_suggestion
+			? res.send(JSON.stringify(search_suggestion))
+			: res.sendStatus(503);
 	});
 };

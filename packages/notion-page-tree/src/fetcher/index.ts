@@ -231,7 +231,7 @@ export type createFetchQueueReturnType = ReturnType<typeof createFetchQueue>;
 // Fetcher Watcher
 /*============================================================================*/
 
-export async function createFetchQueueWatcher({
+export function createFetchQueueWatcher({
 	requestReadyRoutine,
 	requestPromiseRoutine,
 	request_ready_queue,
@@ -246,13 +246,14 @@ export async function createFetchQueueWatcher({
 		page_collection: typeof page_collection;
 		root: Entity;
 	}>(resolve => {
-		setInterval(() => {
+		const watcher = setInterval(() => {
 			if (
 				request_promise_queue.length === 0 &&
 				request_ready_queue.length === 0
 			) {
 				clearInterval(requestPromiseRoutine);
 				clearInterval(requestReadyRoutine);
+				clearInterval(watcher);
 				resolve({
 					page_collection: page_collection,
 					root: rootEntity

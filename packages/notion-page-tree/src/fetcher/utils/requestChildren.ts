@@ -129,6 +129,9 @@ export const getBlockChildrenAll = async ({
 	return combinedResults;
 };
 
+/**
+ * Reduce block types into three types : page, database and block (all the others)
+ */
 const normalizeBlockType = (
 	entity_type: GetBlockResponseWithMetadata['type']
 ) => {
