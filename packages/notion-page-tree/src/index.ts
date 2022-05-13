@@ -21,6 +21,11 @@ import { appendToDotEnv } from './utils/appendToDotEnv';
 import dotenv from 'dotenv';
 // import { createHash } from 'crypto';
 
+interface NotionPageTreeParameters {
+	private_file_path?: string;
+	createFetchQueueOptions?: CreateFetchQueueOptions;
+}
+
 export default class NotionPageTree {
 	// Variables holding page data
 	page_collection: Record<string, FlatEntity> | undefined;
@@ -39,15 +44,9 @@ export default class NotionPageTree {
 	};
 	createFetchQueueOptions: CreateFetchQueueOptions;
 
-	constructor({
-		private_file_path,
-		createFetchQueueOptions = {}
-	}: {
-		private_file_path: string;
-		createFetchQueueOptions: CreateFetchQueueOptions;
-	}) {
-		this.private_file_path = private_file_path;
-		this.createFetchQueueOptions = createFetchQueueOptions;
+	constructor(options?: NotionPageTreeParameters) {
+		this.private_file_path = options?.private_file_path || './';
+		this.createFetchQueueOptions = options?.createFetchQueueOptions || {};
 	}
 
 	/**

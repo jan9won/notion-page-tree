@@ -1,17 +1,54 @@
 import NotionPageTree from '../src';
 import path from 'path';
 
-(async function main() {
-	// Create main class instance.
+async function simple_use() {
+	const notionPageTree = new NotionPageTree();
+	// construct main class instance
+
+	const server = notionPageTree.setupServer({ port: 8889 });
+	// Setup servers for listing and searching pages. (will respond 503 if pages are not fetched yet)
+
+	await notionPageTree.parseCachedDocument();
+	// Look for cached documents in private_file_path.
+
+	await notionPageTree.setRequestParameters({ prompt: true });
+	// Set environment variables that are needed for requesting Notion API.
+
+	await notionPageTree.fetchOnce();
+	// Fetch pages once asynchronously.
+
+	notionPageTree.startFetchLoop(1000 * 10);
+	// Create an asynchronouse fetch loop. Wait for some milliseconds between each fetch.
+
+	setTimeout(() => {
+		notionPageTree.stopFetchLoop();
+		// Stopping fetch loop immediately.
+
+		server.close();
+		// Stopping servers immediately.
+	}, 1000 * 30);
+}
+simple_use();
+
+async function use_more_options() {
 	const notionPageTree = new NotionPageTree({
-		private_file_path: path.resolve('./sample/'),
+		private_file_path: path.resolve('./results/'), // path to save serialized page data
+
 		createFetchQueueOptions: {
-			maxConcurrency: 3, // Current official rate limit is 3 requests per second. Notion api will throw error when you increase this value.
-			maxRetry: 2, // "rate_limited" error will not be retried and process will be exited immediately.
-			maxRequestDepth: 3, // Depth applied to all the entities.
-			maxBlockDepth: 2, // Depth applied to blocks (relative to nearest parent page).
+			maxConcurrency: 3,
+			// Current official rate limit is 3 requests per second. Notion api would likely to throw error when you increase this value.
+
+			maxRetry: 2,
+			// How many times errored request are retried ("rate_limited" error will wait some minutes before retrying)
+
+			maxRequestDepth: 3,
+			// Search depth applied to all the entities.
+
+			maxBlockDepth: 2,
+			// Search depth applied only to plain blocks (not page or database, relative depth to the nearest parent page).
+
 			databaseQueryFilter: {
-				// Database query filter.
+				// Use filters when querying databases (Find details in official notion API).
 				property: 'isPublished',
 				checkbox: {
 					equals: true
@@ -20,37 +57,22 @@ import path from 'path';
 		}
 	});
 
-	notionPageTree.parseCachedDocument();
-	// Look for cached documents in `private_file_path`, assign to Page Data Variables.
-
-	const requestParameters = await notionPageTree.setRequestParameters({
-		forceRewrite: false,
-		prompt: true
-	});
-	console.log(
-		'Requesting',
-		requestParameters.entry_type,
-		'with id',
-		requestParameters.entry_id
-	);
-	// Set environment variables that are needed for Notion API.
-
+	await notionPageTree.parseCachedDocument();
 	const server = notionPageTree.setupServer({ port: 8888 });
-	// Setup servers for listing and searching pages. (will respond 503 if pages are undefined)
 
-	// await notionPageTree.fetchOnce();
-	// Fetch pages asynchronously, then assign results to variables.
+	await notionPageTree.setRequestParameters({
+		prompt: true,
+		// Prompt and rewrite .env if parameters don't exist.
 
-	notionPageTree.startFetchLoop(1000 * 10); // 10 seconds
-	// Create asynchronouse fetch loop, which waits for some milliseconds between each fetch.
+		forceRewrite: false
+		// Prompt and rewrite .env even if parameters exist.
+	});
+	await notionPageTree.fetchOnce();
+
+	notionPageTree.startFetchLoop(1000 * 10);
 
 	setTimeout(() => {
-		// after 30 seconds
-		console.log('stopping fetch loop');
 		notionPageTree.stopFetchLoop();
-		// Stopping fetch loop after current fetch resolves.
-		console.log('closing servers');
 		server.close();
-		// Stopping servers immediately.
 	}, 1000 * 30);
-})();
+}

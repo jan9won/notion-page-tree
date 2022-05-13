@@ -1,7 +1,20 @@
 {
 	"name": "notion-page-tree",
-	"version": "1.0.0",
+	"version": "1.0.4",
 	"main": "./dist/index.js",
+	"license": "MIT",
+	"packageManager": "yarn@3.2.0",
+	"homepage": "https://github.com/jan9won/notion-page-tree/tree/main/packages/notion-page-tree/#readme",
+	"description": "Recursively fetch nested Notion pages from the root page/database/block node.",
+	"author": {
+		"name": "Jangwon Suh",
+		"email": "jan9won@gmail.com"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/jan9won/notion-page-tree",
+		"directory": "packages/notion-page-tree"
+	},
 	"scripts": {
 		"dev": "ts-node ./src/index.ts",
 		"test": "jest ./src --forceExit",

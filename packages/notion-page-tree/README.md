@@ -1,9 +1,13 @@
 # Notion Page Tree
 > Fetch nested Notion pages from the root page/database/block.
 
+![npm](https://img.shields.io/npm/v/notion-page-tree)
+![size](https://img.shields.io/bundlephobia/minzip/notion-page-tree)
+![prettier](https://img.shields.io/badge/codestyle-prettier-brightgreen)
 ---
 
 - [Notion Page Tree](#notion-page-tree)
+	- [!prettier](#)
 	- [Why Would I Want This?](#why-would-i-want-this)
 		- [🙌 Use the official Notion API.](#-use-the-official-notion-api)
 		- [🕸 Fetch nested children pages.](#-fetch-nested-children-pages)
@@ -14,8 +18,8 @@
 		- [🔎 It builds basic page search indexes.](#-it-builds-basic-page-search-indexes)
 	- [Usage](#usage)
 		- [`.env` File Configuration](#env-file-configuration)
-		- [Create Instance](#create-instance)
-		- [Fetcher and Server Setup (sample)](#fetcher-and-server-setup-sample)
+		- [Basic Usage](#basic-usage)
+		- [Usage with More Options](#usage-with-more-options)
 	- [How It Works (Flowchart)](#how-it-works-flowchart)
 
 ---
@@ -53,8 +57,9 @@
 ---
 
 ## Usage
-### `.env` File Configuration
+> See `./sample/index.ts` for full example file.
 
+### `.env` File Configuration
 Write directly on `<package_root>/.env`
 ```text
 NOTION_ENTRY_ID = <root page/database/block's id>
@@ -62,37 +67,64 @@ NOTION_ENTRY_KEY = <root's integration key>
 NOTION_ENTRY_TYPE = <page/database/block>
 ```
 
-### Create Instance
-Interactively Ask for parameters.
+### Basic Usage
 ```js
-const notionPageTree = new NotionPageTree({
-	fetchIntervalMinutes: 5,
-	private_file_path: path.resolve('./sample/')
-});
+import NotionPageTree from 'notion-page-tree';
+
+async function simple_use() {
+	const notionPageTree = new NotionPageTree();
+	// construct main class instance
+
+	const server = notionPageTree.setupServer({ port: 8889 });
+	// Setup servers for listing and searching pages. (will respond 503 if pages are not fetched yet)
+
+	await notionPageTree.parseCachedDocument();
+	// Look for cached documents in private_file_path.
+
+	await notionPageTree.setRequestParameters({ prompt: true });
+	// Set environment variables that are needed for requesting Notion API.
+
+	await notionPageTree.fetchOnce();
+	// Fetch pages once asynchronously.
+
+	notionPageTree.startFetchLoop(1000 * 10);
+	// Create an asynchronouse fetch loop. Wait for some milliseconds between each fetch.
+
+	setTimeout(() => {
+		notionPageTree.stopFetchLoop();
+		// Stopping fetch loop immediately.
+
+		server.close();
+		// Stopping servers immediately.
+	}, 1000 * 30);
+}
+simple_use();
 ```
 
-### Fetcher and Server Setup (sample)
-  
-Run `yarn serve` to see fetcher running in action.
-
-Sample database is here https://notion.so/2345a2ce3cdd48f183cca1f6d1ae25ca
-
-`./sample/index.ts`
+### Usage with More Options
 ```js
 import NotionPageTree from 'notion-page-tree';
 import path from 'path';
 
-(async function main() {
-	// Create main class instance.
+async function use_more_options() {
 	const notionPageTree = new NotionPageTree({
-		private_file_path: path.resolve('./sample/'),
+		private_file_path: path.resolve('./results/'), // path to save serialized page data
+
 		createFetchQueueOptions: {
-			maxConcurrency: 3, // Current official rate limit is 3 requests per second. Notion api will throw error when you increase this value.
-			maxRetry: 2, // "rate_limited" error will not be retried and process will be exited immediately.
-			maxRequestDepth: 3, // Depth applied to all the entities.
-			maxBlockDepth: 2, // Depth applied to blocks (relative to nearest parent page).
+			maxConcurrency: 3,
+			// Current official rate limit is 3 requests per second. Notion api would likely to throw error when you increase this value.
+
+			maxRetry: 2,
+			// How many times errored request are retried ("rate_limited" error will wait some minutes before retrying)
+
+			maxRequestDepth: 3,
+			// Search depth applied to all the entities.
+
+			maxBlockDepth: 2,
+			// Search depth applied only to plain blocks (not page or database, relative depth to the nearest parent page).
+
 			databaseQueryFilter: {
-				// Database query filter.
+				// Use filters when querying databases (Find details in official notion API).
 				property: 'isPublished',
 				checkbox: {
 					equals: true
@@ -101,45 +133,31 @@ import path from 'path';
 		}
 	});
 
-	notionPageTree.parseCachedDocument();
-	// Look for cached documents in `private_file_path`, assign to Page Data Variables.
-
-	const requestParameters = await notionPageTree.setRequestParameters({
-		forceRewrite: false,
-		prompt: true
-	});
-	console.log(
-		'Requesting',
-		requestParameters.entry_type,
-		'with id',
-		requestParameters.entry_id
-	);
-	// Set environment variables that are needed for Notion API.
-
+	await notionPageTree.parseCachedDocument();
 	const server = notionPageTree.setupServer({ port: 8888 });
-	// Setup servers for listing and searching pages. (will respond 503 if pages are undefined)
 
-	// await notionPageTree.fetchOnce();
-	// Fetch pages asynchronously, then assign results to variables.
+	await notionPageTree.setRequestParameters({
+		prompt: true,
+		// Prompt and rewrite .env if parameters don't exist.
 
-	notionPageTree.startFetchLoop(1000 * 10); // 10 seconds
-	// Create asynchronouse fetch loop, which waits for some milliseconds between each fetch.
+		forceRewrite: false
+		// Prompt and rewrite .env even if parameters exist.
+	});
+	await notionPageTree.fetchOnce();
+
+	notionPageTree.startFetchLoop(1000 * 10);
 
 	setTimeout(() => {
-		// after 30 seconds
-		console.log('stopping fetch loop');
 		notionPageTree.stopFetchLoop();
-		// Stopping fetch loop after current fetch resolves.
-		console.log('closing servers');
 		server.close();
-		// Stopping servers immediately.
 	}, 1000 * 30);
-})();
+}
+
 
 ```
 
 ## How It Works (Flowchart)
-<div style="overflow-x: scroll !important; white-space: pre-wrap !important;">
+<div style="overflow-x: scroll !important; white-space: pre-wrap !important; width: 100%">
 <pre style="display: inline-block;">
 <code>/******************************************************************************************************************************************************************************************************************************************************************************************************************************\
 *                                                                                                                                                                                                                                                                                                                              *

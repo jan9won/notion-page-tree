@@ -1,5 +1,4 @@
 {
-	"private": true,
 	"packageManager": "yarn@3.2.0",
 	"homepage": "https://github.com/jan9won/notion-page-tree/#readme",
 	"description": "Recursively fetch nested Notion pages from the root page/database/block node.",
