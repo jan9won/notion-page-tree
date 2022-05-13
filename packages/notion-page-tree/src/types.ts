@@ -10,9 +10,9 @@ import { normalizeBlockType } from './fetcher/utils';
 // Arguments for every API request
 export interface RequestParameters {
 	client: Client;
-	entry_id: string;
-	entry_key: string;
-	entry_type: string;
+	entry_id?: string;
+	entry_key?: string;
+	entry_type?: string;
 }
 
 //

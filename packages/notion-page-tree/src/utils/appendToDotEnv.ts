@@ -5,14 +5,14 @@ import { EOL } from 'os';
 export const appendToDotEnv = async (
 	envFilePath: string,
 	newEnv: DotenvParseOutput,
-	envFile?: DotenvParseOutput
+	env?: DotenvParseOutput
 ) => {
 	console.log(`Writing new variables to ${envFilePath}`);
 
 	await writeFile(
 		envFilePath,
 		Object.entries({
-			...envFile,
+			...env,
 			...newEnv
 		}).reduce((concat, env) => `${concat}${EOL}${env[0]}=${env[1]}`, '')
 	);

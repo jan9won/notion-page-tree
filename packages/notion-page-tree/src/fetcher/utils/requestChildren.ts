@@ -47,6 +47,12 @@ const queryDatabaseAll = async ({
 	_entity_list = [],
 	_cursor = undefined
 }: queryDatabaseAllParameters) => {
+	if (!requestParameters.entry_id || !requestParameters.entry_key) {
+		throw Error(`RequestParameters are incorrect. 
+		Please check if the integration key is added to sharing configuration of the database.
+		id: ${requestParameters.entry_id}
+		key: ${requestParameters.entry_key}`);
+	}
 	const { results, next_cursor } =
 		await requestParameters.client.databases.query({
 			database_id: requestParameters.entry_id,
@@ -97,6 +103,12 @@ export const getBlockChildrenAll = async ({
 	_entity_list = [],
 	_cursor = undefined
 }: getBlockChildrenAllParameters) => {
+	if (!requestParameters.entry_id || !requestParameters.entry_key) {
+		throw Error(`RequestParameters are incorrect. 
+		Please check if the integration key is added to sharing configuration of the database.
+		id: ${requestParameters.entry_id}
+		key: ${requestParameters.entry_key}`);
+	}
 	const { results, next_cursor } =
 		await requestParameters.client.blocks.children.list({
 			block_id: requestParameters.entry_id,

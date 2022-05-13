@@ -2,7 +2,6 @@ import path from 'path';
 import {
 	createFetchQueue,
 	CreateFetchQueueOptions,
-	CreateFetchQueueParameters,
 	createFetchQueueWatcher
 } from './fetcher';
 import { createPageSearchIndex } from './server/utils/createPageSearchIndex';
@@ -16,7 +15,6 @@ import {
 } from './types';
 import type lunr from 'lunr';
 import fsExists from './utils/fsExists';
-import delay from './utils/delay';
 import { Client } from '@notionhq/client';
 import { askInput, askSelect } from './utils';
 import { appendToDotEnv } from './utils/appendToDotEnv';
@@ -35,9 +33,9 @@ export default class NotionPageTree {
 	private_file_path: string;
 	requestParameters: RequestParameters = {
 		client: new Client(),
-		entry_id: '',
-		entry_key: '',
-		entry_type: ''
+		entry_id: undefined,
+		entry_key: undefined,
+		entry_type: undefined
 	};
 	createFetchQueueOptions: CreateFetchQueueOptions;
 
@@ -149,14 +147,9 @@ export default class NotionPageTree {
 		// If some env does not exist and prompt option is true,
 		// Or forceRewrite option is true,
 		// Ask for user input.
-		if (
-			forceRewrite ||
-			((this.requestParameters.entry_id === undefined ||
-				this.requestParameters.entry_key === undefined ||
-				this.requestParameters.entry_type === undefined) &&
-				prompt)
-		) {
+		if (forceRewrite || prompt) {
 			this.requestParameters.entry_id === undefined &&
+				prompt &&
 				(this.requestParameters.entry_id = await askInput(
 					'entry_id',
 					"Enter root block's id",
@@ -175,15 +168,18 @@ export default class NotionPageTree {
 						'select entry block"s type'
 					));
 			// write new variables to package's .env file
-			appendToDotEnv(
-				envFilePath,
-				{
-					NOTION_ENTRY_ID: this.requestParameters.entry_id,
-					NOTION_ENTRY_KEY: this.requestParameters.entry_key,
-					NOTION_ENTRY_TYPE: this.requestParameters.entry_type
-				},
-				envFile ? envFile : undefined
-			);
+			this.requestParameters.entry_id &&
+				this.requestParameters.entry_key &&
+				this.requestParameters.entry_type &&
+				appendToDotEnv(
+					envFilePath,
+					{
+						NOTION_ENTRY_ID: this.requestParameters.entry_id,
+						NOTION_ENTRY_KEY: this.requestParameters.entry_key,
+						NOTION_ENTRY_TYPE: this.requestParameters.entry_type
+					},
+					envFile ? envFile : undefined
+				);
 			console.log(
 				'Reqparams written in .env file',
 				this.requestParameters.entry_id,
@@ -200,10 +196,10 @@ export default class NotionPageTree {
 		) {
 			throw new Error(
 				`Can't find environment variables. 
-			Set ${this.requestParameters.entry_id ? 'NOTION_ENTRY_ID, ' : ''}${
-					this.requestParameters.entry_key ? 'NOTION_ENTRY_KEY, ' : ''
+			Set ${this.requestParameters.entry_id === '' ? 'NOTION_ENTRY_ID, ' : ''}${
+					this.requestParameters.entry_key === '' ? 'NOTION_ENTRY_KEY, ' : ''
 				}${
-					this.requestParameters.entry_type ? 'NOTION_ENTRY_TYPE, ' : ''
+					this.requestParameters.entry_type === '' ? 'NOTION_ENTRY_TYPE, ' : ''
 				}in .env file or provide them as parameters`
 			);
 		} else {
@@ -217,9 +213,9 @@ export default class NotionPageTree {
 	 */
 	async fetchOnce() {
 		if (
-			this.requestParameters.entry_id === '' ||
-			this.requestParameters.entry_key === '' ||
-			this.requestParameters.entry_type === ''
+			this.requestParameters.entry_id === undefined ||
+			this.requestParameters.entry_key === undefined ||
+			this.requestParameters.entry_type === undefined
 		) {
 			await this.setRequestParameters({ prompt: false, forceRewrite: false });
 		}
