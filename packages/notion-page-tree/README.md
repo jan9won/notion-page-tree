@@ -119,20 +119,21 @@ import path from 'path';
 	const server = notionPageTree.setupServer({ port: 8888 });
 	// Setup servers for listing and searching pages. (will respond 503 if pages are undefined)
 
-	await notionPageTree.fetchOnce();
+	// await notionPageTree.fetchOnce();
 	// Fetch pages asynchronously, then assign results to variables.
 
-	const fetchLoop = notionPageTree.startFetchLoop(1000 * 60 * 5); // 5 minutes
+	notionPageTree.startFetchLoop(1000 * 10); // 10 seconds
 	// Create asynchronouse fetch loop, which waits for some milliseconds between each fetch.
 
 	setTimeout(() => {
+		// after 30 seconds
 		console.log('stopping fetch loop');
-		clearInterval(fetchLoop);
+		notionPageTree.stopFetchLoop();
 		// Stopping fetch loop after current fetch resolves.
 		console.log('closing servers');
 		server.close();
 		// Stopping servers immediately.
-	}, 15 * 1000);
+	}, 1000 * 30);
 })();
 
 ```
