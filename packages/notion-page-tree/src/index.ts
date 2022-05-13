@@ -27,7 +27,7 @@ export default class NotionPageTree {
 	root: Entity | undefined;
 	search_index: lunr.Index | undefined;
 	search_suggestion: string[] | undefined;
-	continueLoop: boolean;
+	fetchLoopTimer?: NodeJS.Timeout;
 
 	// constructor initiated variables
 	private_file_path: string;
@@ -48,7 +48,6 @@ export default class NotionPageTree {
 	}) {
 		this.private_file_path = private_file_path;
 		this.createFetchQueueOptions = createFetchQueueOptions;
-		this.continueLoop = true;
 	}
 
 	/**
@@ -181,10 +180,10 @@ export default class NotionPageTree {
 					envFile ? envFile : undefined
 				);
 			console.log(
-				'Reqparams written in .env file',
-				this.requestParameters.entry_id,
-				this.requestParameters.entry_key,
-				this.requestParameters.entry_type
+				`Reqparams written in .env file
+				id : ${this.requestParameters.entry_id}
+				key : ${this.requestParameters.entry_key}
+				type : ${this.requestParameters.entry_type}`
 			);
 		}
 
@@ -259,9 +258,10 @@ export default class NotionPageTree {
 	/**
 	 * Create asynchronouse fetch loop, which waits for `fetchIntervalMinutes` after each fetch is completed.
 	 */
-	startFetchLoop(fetchInterval: number) {
-		return setTimeout(() => {
-			`Waiting ${fetchInterval} milliseconds for the next fetch.`;
+	async startFetchLoop(fetchInterval: number) {
+		await this.fetchOnce();
+		console.log(`Waiting ${fetchInterval} milliseconds for the next fetch.`);
+		this.fetchLoopTimer = setTimeout(() => {
 			this.startFetchLoop(fetchInterval);
 		}, fetchInterval);
 	}
@@ -270,7 +270,9 @@ export default class NotionPageTree {
 	 * Stop the fetch loop after current fetch is resolved.
 	 */
 	stopFetchLoop() {
-		this.continueLoop = false;
+		this.fetchLoopTimer
+			? clearTimeout(this.fetchLoopTimer)
+			: console.error('fetch loop is not started yet');
 	}
 
 	/**
