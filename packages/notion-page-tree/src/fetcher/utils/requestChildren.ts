@@ -12,7 +12,7 @@ const createChildrenRequest = (
 ) =>
 	parent.type === 'database'
 		? queryDatabaseAll({
-				RequestParameters: {
+				requestParameters: {
 					...requestParameters,
 					entry_id: parent.id,
 					entry_type: 'database'
@@ -21,7 +21,7 @@ const createChildrenRequest = (
 				filter: databaseQueryFilter
 		  })
 		: getBlockChildrenAll({
-				RequestParameters: {
+				requestParameters: {
 					...requestParameters,
 					entry_id: parent.id,
 					entry_type: 'block'
@@ -30,7 +30,7 @@ const createChildrenRequest = (
 		  });
 
 interface queryDatabaseAllParameters {
-	RequestParameters: RequestParameters;
+	requestParameters: RequestParameters;
 	parent: Entity;
 	filter?: QueryDatabaseParameters['filter'];
 	_entity_list?: Entity[];
@@ -41,18 +41,19 @@ interface queryDatabaseAllParameters {
  * Get all entities (with properties) from the database.
  */
 const queryDatabaseAll = async ({
-	RequestParameters: { entry_id, entry_key, entry_type, client },
+	requestParameters,
 	parent,
 	filter,
 	_entity_list = [],
 	_cursor = undefined
 }: queryDatabaseAllParameters) => {
-	const { results, next_cursor } = await client.databases.query({
-		database_id: entry_id,
-		auth: entry_key,
-		start_cursor: _cursor,
-		filter: filter
-	});
+	const { results, next_cursor } =
+		await requestParameters.client.databases.query({
+			database_id: requestParameters.entry_id,
+			auth: requestParameters.entry_key,
+			start_cursor: _cursor,
+			filter: filter
+		});
 
 	const combinedResults = [
 		..._entity_list,
@@ -71,7 +72,7 @@ const queryDatabaseAll = async ({
 
 	next_cursor &&
 		queryDatabaseAll({
-			RequestParameters: { entry_id, entry_key, client, entry_type },
+			requestParameters,
 			parent,
 			_entity_list: combinedResults,
 			_cursor: next_cursor,
@@ -81,7 +82,7 @@ const queryDatabaseAll = async ({
 };
 
 interface getBlockChildrenAllParameters {
-	RequestParameters: RequestParameters;
+	requestParameters: RequestParameters;
 	parent: Entity;
 	_entity_list?: Entity[];
 	_cursor?: string;
@@ -91,16 +92,17 @@ interface getBlockChildrenAllParameters {
  * Get all entities (with properties) from the database.
  */
 export const getBlockChildrenAll = async ({
-	RequestParameters: { entry_id, entry_key, entry_type, client },
+	requestParameters,
 	parent,
 	_entity_list = [],
 	_cursor = undefined
 }: getBlockChildrenAllParameters) => {
-	const { results, next_cursor } = await client.blocks.children.list({
-		block_id: entry_id,
-		auth: entry_key,
-		start_cursor: _cursor
-	});
+	const { results, next_cursor } =
+		await requestParameters.client.blocks.children.list({
+			block_id: requestParameters.entry_id,
+			auth: requestParameters.entry_key,
+			start_cursor: _cursor
+		});
 
 	const resultsWithMetadata = results as GetBlockResponseWithMetadata[];
 
@@ -121,7 +123,7 @@ export const getBlockChildrenAll = async ({
 
 	next_cursor &&
 		getBlockChildrenAll({
-			RequestParameters: { entry_id, entry_key, client, entry_type },
+			requestParameters,
 			parent,
 			_entity_list: combinedResults,
 			_cursor: next_cursor
@@ -132,7 +134,7 @@ export const getBlockChildrenAll = async ({
 /**
  * Reduce block types into three types : page, database and block (all the others)
  */
-const normalizeBlockType = (
+export const normalizeBlockType = (
 	entity_type: GetBlockResponseWithMetadata['type']
 ) => {
 	const type: Entity['type'] =

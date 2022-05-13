@@ -1,13 +1,26 @@
 import path from 'path';
-import { createFetchQueue, createFetchQueueWatcher } from './fetcher';
+import {
+	createFetchQueue,
+	CreateFetchQueueOptions,
+	CreateFetchQueueParameters,
+	createFetchQueueWatcher
+} from './fetcher';
 import { createPageSearchIndex } from './server/utils/createPageSearchIndex';
 import { writeFile, readFile, readdir, lstat, mkdir } from 'fs/promises';
 import { setupServer } from './server/setupServer';
-import { createRequestParameters } from './fetcher/utils';
-import { type Entity, type FlatEntity } from './types';
+import {
+	NormalizedEntryType,
+	type Entity,
+	type FlatEntity,
+	type RequestParameters
+} from './types';
 import type lunr from 'lunr';
 import fsExists from './utils/fsExists';
 import delay from './utils/delay';
+import { Client } from '@notionhq/client';
+import { askInput, askSelect } from './utils';
+import { appendToDotEnv } from './utils/appendToDotEnv';
+import dotenv from 'dotenv';
 // import { createHash } from 'crypto';
 
 export default class NotionPageTree {
@@ -18,32 +31,30 @@ export default class NotionPageTree {
 	search_suggestion: string[] | undefined;
 	continueLoop: boolean;
 
-	// Request parameters
-	fetchIntervalMinutes: number;
+	// constructor initiated variables
 	private_file_path: string;
-	root_id?: string;
-	root_key?: string;
+	requestParameters: RequestParameters = {
+		client: new Client(),
+		entry_id: '',
+		entry_key: '',
+		entry_type: ''
+	};
+	createFetchQueueOptions: CreateFetchQueueOptions;
 
 	constructor({
-		fetchIntervalMinutes,
 		private_file_path,
-		root_id,
-		root_key
+		createFetchQueueOptions = {}
 	}: {
-		fetchIntervalMinutes: number;
 		private_file_path: string;
-		root_id?: string;
-		root_key?: string;
+		createFetchQueueOptions: CreateFetchQueueOptions;
 	}) {
-		this.fetchIntervalMinutes = fetchIntervalMinutes;
 		this.private_file_path = private_file_path;
-		this.root_id = root_id;
-		this.root_key = root_key;
+		this.createFetchQueueOptions = createFetchQueueOptions;
 		this.continueLoop = true;
 	}
 
 	/**
-	 * Find Cached Document to Serve Immediately
+	 * Find cached documents to serve immediately.
 	 */
 	async parseCachedDocument() {
 		// If directory doesn't exist, create
@@ -104,28 +115,118 @@ export default class NotionPageTree {
 		}
 	}
 
+	/**
+	 * Look for environment variables that are needed to fetch page tree.
+	 * If they don't exist, ask for it.
+	 */
+	/**
+	 * Look for environment variables that are needed to fetch page tree.
+	 * @param prompt If variables are missing, prompt user with interactive CLI.
+	 * @param forceRewrite Prompt user with interactive CLI even if variables exist.
+	 * @returns
+	 * client: Notion API client instance.
+	 *
+	 * entry_id: Root entry's id (any block is allowed).
+	 *
+	 * entry_key: Root entry's integration key. Create one here (https://www.notion.so/my-integrations). ⚠️ Must be added to the entry block's "share" settings.
+	 *
+	 * entry_type: 'page' | 'database' | 'block'(all the others)
+	 */
+	async setRequestParameters({ prompt = false, forceRewrite = false }) {
+		// Try to set local .env file.
+		const envFilePath = path.resolve('.env');
+		const envFile = dotenv.config({ path: envFilePath, override: true }).parsed;
+
+		// Try to read from process.env.
+		process.env.NOTION_ENTRY_ID &&
+			(this.requestParameters.entry_id = process.env.NOTION_ENTRY_ID);
+		process.env.NOTION_ENTRY_KEY &&
+			(this.requestParameters.entry_key = process.env.NOTION_ENTRY_KEY);
+		process.env.NOTION_ENTRY_TYPE &&
+			(this.requestParameters.entry_type = process.env
+				.NOTION_ENTRY_TYPE as NormalizedEntryType);
+
+		// If some env does not exist and prompt option is true,
+		// Or forceRewrite option is true,
+		// Ask for user input.
+		if (
+			forceRewrite ||
+			((this.requestParameters.entry_id === undefined ||
+				this.requestParameters.entry_key === undefined ||
+				this.requestParameters.entry_type === undefined) &&
+				prompt)
+		) {
+			this.requestParameters.entry_id === undefined &&
+				(this.requestParameters.entry_id = await askInput(
+					'entry_id',
+					"Enter root block's id",
+					true
+				));
+			this.requestParameters.entry_key === undefined &&
+				(this.requestParameters.entry_key = await askInput(
+					'entry_key',
+					"Enter root block's key",
+					true
+				));
+			this.requestParameters.entry_type === undefined &&
+				(this.requestParameters.entry_type =
+					await askSelect<NormalizedEntryType>(
+						['database', 'page', 'block'],
+						'select entry block"s type'
+					));
+			// write new variables to package's .env file
+			appendToDotEnv(
+				envFilePath,
+				{
+					NOTION_ENTRY_ID: this.requestParameters.entry_id,
+					NOTION_ENTRY_KEY: this.requestParameters.entry_key,
+					NOTION_ENTRY_TYPE: this.requestParameters.entry_type
+				},
+				envFile ? envFile : undefined
+			);
+			console.log(
+				'Reqparams written in .env file',
+				this.requestParameters.entry_id,
+				this.requestParameters.entry_key,
+				this.requestParameters.entry_type
+			);
+		}
+
+		// if still doesn't exist, throw
+		if (
+			this.requestParameters.entry_id === undefined ||
+			this.requestParameters.entry_key === undefined ||
+			this.requestParameters.entry_type === undefined
+		) {
+			throw new Error(
+				`Can't find environment variables. 
+			Set ${this.requestParameters.entry_id ? 'NOTION_ENTRY_ID, ' : ''}${
+					this.requestParameters.entry_key ? 'NOTION_ENTRY_KEY, ' : ''
+				}${
+					this.requestParameters.entry_type ? 'NOTION_ENTRY_TYPE, ' : ''
+				}in .env file or provide them as parameters`
+			);
+		} else {
+			// else, return
+			return this.requestParameters;
+		}
+	}
+
+	/**
+	 * Fetch pages asynchronously, and then assign results to variables.
+	 */
 	async fetchOnce() {
-		// Create Page Fetcher
-		const requestParameters = await createRequestParameters({
-			prompt: false, // prompt if parameters don't exist
-			writeToEnvFile: false, // write new parameters to local .env file
-			forceRewrite: false // prompt and rewrite .env file even if they alread exist
-		});
+		if (
+			this.requestParameters.entry_id === '' ||
+			this.requestParameters.entry_key === '' ||
+			this.requestParameters.entry_type === ''
+		) {
+			await this.setRequestParameters({ prompt: false, forceRewrite: false });
+		}
 
 		const fetchQueue = createFetchQueue({
-			requestParameters,
-			rootType: 'database',
-			maxConcurrency: 3, // Current official rate limit is 3 requests per second. Notion api will throw error when you increase this value.
-			maxRetry: 3, // "rate_limited" error will not be retried and process will be exited immediately.
-			maxRequestDepth: 3, // depth applied to all the entities.
-			maxBlockDepth: 3, // depth. applied to blocks (not page or database)
-			databaseQueryFilter: {
-				// optional database filter
-				property: 'isPublished',
-				checkbox: {
-					equals: true
-				}
-			}
+			...this.createFetchQueueOptions,
+			requestParameters: this.requestParameters
 		});
 
 		const fetchResult = await createFetchQueueWatcher(fetchQueue);
@@ -160,27 +261,24 @@ export default class NotionPageTree {
 	}
 
 	/**
-	 * Create asynchronouse loop, which waits for `fetchIntervalMinutes` after each fetch is completed.
+	 * Create asynchronouse fetch loop, which waits for `fetchIntervalMinutes` after each fetch is completed.
 	 */
-	async startFetchLoop() {
-		while (this.continueLoop) {
-			await this.fetchOnce();
-			console.log(
-				`Waiting ${this.fetchIntervalMinutes} minutes for the next fetch.`
-			);
-			await delay(1000 * 60 * this.fetchIntervalMinutes);
-		}
+	startFetchLoop(fetchInterval: number) {
+		return setTimeout(() => {
+			`Waiting ${fetchInterval} milliseconds for the next fetch.`;
+			this.startFetchLoop(fetchInterval);
+		}, fetchInterval);
 	}
 
 	/**
-	 * Stops fetch loop after current fetch resolves.
+	 * Stop the fetch loop after current fetch is resolved.
 	 */
 	stopFetchLoop() {
 		this.continueLoop = false;
 	}
 
 	/**
-	 * Setup servers for fetched pages and its search indexes
+	 * Setup servers that serves fetched pages and its search indexes. See details in readme.
 	 */
 	setupServer({ port }: { port: number }) {
 		// create server

@@ -7,9 +7,7 @@ import { flattenEntity } from './utils/flattenEntity';
 import requestChildren from './utils/requestChildren';
 import { QueryDatabaseParameters } from '@notionhq/client/build/src/api-endpoints';
 
-interface fetchPagesRecursivelyProperties {
-	requestParameters: RequestParameters;
-	rootType: 'database' | 'page';
+export interface CreateFetchQueueOptions {
 	maxConcurrency?: number;
 	maxRequestDepth?: number;
 	maxBlockDepth?: number;
@@ -17,12 +15,18 @@ interface fetchPagesRecursivelyProperties {
 	databaseQueryFilter?: QueryDatabaseParameters['filter'];
 }
 
+export interface CreateFetchQueueParameters extends CreateFetchQueueOptions {
+	requestParameters: RequestParameters;
+}
+
 /*============================================================================*/
 // Fetcher
 /*============================================================================*/
 
 /**
- * @param maxBlockDepth try to keep it to 1, and read following.
+ * @param maxBlockDepth
+ * Try to keep this variable to 1.
+ *
  * This is a relative depth between parent page and a block inside it.
  * Increasing this value will result in better search indexing and nested child page discovery,
  * but it will also increase request count (more than) EXPONENTIALLY.
@@ -32,13 +36,12 @@ interface fetchPagesRecursivelyProperties {
  */
 export const createFetchQueue = ({
 	requestParameters,
-	rootType,
 	maxConcurrency = 3,
 	maxRequestDepth = 3,
 	maxBlockDepth = 3,
 	maxRetry = 3,
 	databaseQueryFilter = undefined
-}: fetchPagesRecursivelyProperties) => {
+}: CreateFetchQueueParameters) => {
 	let currentMaxDepth = 0;
 	let currentRequestCount = 0;
 	let errorTimeout: ReturnType<typeof setTimeout> | undefined = undefined;
@@ -59,7 +62,7 @@ export const createFetchQueue = ({
 
 	const rootEntity = {
 		id: requestParameters.entry_id,
-		type: rootType,
+		type: requestParameters.entry_type,
 		depth: 0,
 		blockContentPlainText: '',
 		children: [] as Entity[]
@@ -239,21 +242,21 @@ export function createFetchQueueWatcher({
 	page_collection,
 	rootEntity
 }: createFetchQueueReturnType) {
-	console.log('Waiting for fetcher to resolve...');
+	console.log('Waiting for fetch queue to resolve...');
 
 	// check for routines
 	return new Promise<{
 		page_collection: typeof page_collection;
 		root: Entity;
 	}>(resolve => {
-		const watcher = setInterval(() => {
+		const fetchQueueWatcher = setInterval(() => {
 			if (
 				request_promise_queue.length === 0 &&
 				request_ready_queue.length === 0
 			) {
 				clearInterval(requestPromiseRoutine);
 				clearInterval(requestReadyRoutine);
-				clearInterval(watcher);
+				clearInterval(fetchQueueWatcher);
 				resolve({
 					page_collection: page_collection,
 					root: rootEntity

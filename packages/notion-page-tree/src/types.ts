@@ -1,15 +1,22 @@
+import { Client } from '@notionhq/client';
 import {
 	GetPageResponse,
 	GetDatabaseResponse,
 	GetBlockResponse,
 	QueryDatabaseResponse
 } from '@notionhq/client/build/src/api-endpoints';
-import { createRequestParameters } from './fetcher/utils';
+import { normalizeBlockType } from './fetcher/utils';
 
 // Arguments for every API request
-export type RequestParameters = Awaited<
-	ReturnType<typeof createRequestParameters>
->;
+export interface RequestParameters {
+	client: Client;
+	entry_id: string;
+	entry_key: string;
+	entry_type: string;
+}
+
+//
+export type NormalizedEntryType = ReturnType<typeof normalizeBlockType>;
 
 // Plain page without recursive reference link.
 export type FlatEntity = FlatCommons & (Page | Database | Block);
