@@ -6,6 +6,7 @@ import catReducer, {
 
 describe('catSlice', () => {
 	const state_1 = catReducer(undefined, { type: undefined });
+
 	it('sets initial state', () => {
 		expect(state_1).toStrictEqual({
 			cats: [],
@@ -15,6 +16,7 @@ describe('catSlice', () => {
 		});
 	});
 	const state_2 = catReducer(state_1, fetchRequested());
+
 	it('fetchRequested() requests 10 cat images', () => {
 		expect(state_2.fetchStatus).toStrictEqual('fetching');
 	});
@@ -29,6 +31,7 @@ describe('catSlice', () => {
 			}
 		])
 	);
+
 	it('fetchSucceed() sets cats and fetchStatus', () => {
 		expect(state_3).toStrictEqual({
 			cats: [
@@ -45,6 +48,7 @@ describe('catSlice', () => {
 		});
 	});
 	const state_4 = catReducer(state_3, fetchFailed());
+
 	it('fetchFailed() sets fetchStatus', () => {
 		expect(state_4).toStrictEqual({
 			cats: [

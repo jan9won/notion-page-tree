@@ -8,6 +8,9 @@
 ---
 
 - [Notion Page Tree](#notion-page-tree)
+	- [Shape of Data](#shape-of-data)
+		- [Notion's Original Block Tree Structure](#notions-original-block-tree-structure)
+		- [Fetched Page Structure](#fetched-page-structure)
 	- [Why Would I Want This?](#why-would-i-want-this)
 		- [🙌 Use the official Notion API.](#-use-the-official-notion-api)
 		- [🕸 Fetch nested children pages.](#-fetch-nested-children-pages)
@@ -15,7 +18,7 @@
 	- [Other Features](#other-features)
 		- [💾 It saves fetch results to your local disk.](#-it-saves-fetch-results-to-your-local-disk)
 		- [🥞 It builds basic page server.](#-it-builds-basic-page-server)
-		- [🔎 It builds basic page search indexes.](#-it-builds-basic-page-search-indexes)
+		- [🔎 It builds basic page search indexes (missing feature of the official Notion API).](#-it-builds-basic-page-search-indexes-missing-feature-of-the-official-notion-api)
 	- [Advices](#advices)
 	- [Usage](#usage)
 		- [`.env` File Configuration](#env-file-configuration)
@@ -30,7 +33,85 @@
 		- [`NotionPageTree.prototype.root`](#notionpagetreeprototyperoot)
 		- [`NotionPageTree.prototype.search_index`](#notionpagetreeprototypesearch_index)
 		- [`NotionPageTree.prototype.search_suggestion`](#notionpagetreeprototypesearch_suggestion)
-	- [How It Creates Fetch Queue (Flowchart)](#how-it-creates-fetch-queue-flowchart)
+	- [How It Creates Fetch Queue](#how-it-creates-fetch-queue)
+		- [NodeJS Promise Queue Example](#nodejs-promise-queue-example)
+		- [Flowchart](#flowchart)
+
+
+---
+
+## Shape of Data
+
+### Notion's Original Block Tree Structure
+
+<div style="overflow-x: scroll !important; white-space: pre-wrap !important; width: 100%">
+<pre style="display: inline-block;">
+<code>
+             ┌────────────┐
+             │ database A │
+             └────────────┘
+                    │
+       ┌────────────┴────────────────────┐
+       ▼                                 ▼
+┌────────────┐                    ┌────────────┐
+│   page A   │                    │   page B   │
+└────────────┘                    └────────────┘
+       │                                 │
+       │                                 │
+       ▼                                 ▼
+┌────────────┐                    ┌─────────────┐
+│ check list │                    │ bullet-list │
+└────────────┘                    └─────────────┘
+       │                                 │
+       │                 ┌───────────────┼───────────────┐
+       ▼                 ▼               ▼               ▼
+┌────────────┐    ┌────────────┐  ┌────────────┐  ┌────────────┐
+│toggle list │    │   page C   │  │   page D   │  │list element│
+└────────────┘    └────────────┘  └────────────┘  └────────────┘
+       │                 │                               │
+       │                 │                               │
+       ▼                 ▼                               ▼
+┌────────────┐    ┌────────────┐                  ┌────────────┐
+│   page E   │    │ database B │                  │list Element│
+└────────────┘    └────────────┘                  └────────────┘
+</code>
+</pre></div>
+
+### Fetched Page Structure
+
+<div style="overflow-x: scroll !important; white-space: pre-wrap !important;">
+<pre style="display: inline-block;">
+<code>
+                  ┌────────────┐
+                  │ database A │
+                  └────────────┘
+                         │
+        ┌────────────────┴────────────────┐
+        ▼                                 ▼
+┌───────────────┐                 ┌───────────────┐
+│page A         │                 │page B         │
+│               │                 │               │
+│ blockChildren │                 │ blockChildren │
+│ PlainText     │                 │ PlainText     │
+│┌─────────────┐│                 │┌─────────────┐│
+││ check list  ││                 ││ bullet list ││
+│├─────────────┤│                 │├─────────────┤│
+││ toggle list ││                 ││list element ││
+│└─────────────┘│                 │├─────────────┤│
+└───────┬───────┘                 ││list element ││
+        ▼                         │└─────────────┘│
+ ┌────────────┐                   └───────┬───────┘
+ │   page E   │                   ┌───────┴───────┐
+ └────────────┘                   ▼               ▼
+                           ┌────────────┐  ┌────────────┐
+                           │   page C   │  │   page D   │
+                           └────────────┘  └────────────┘
+                                  │
+                                  ▼
+                           ┌────────────┐
+                           │ database B │
+                           └────────────┘
+</code></pre></div>
 
 ---
 
@@ -41,7 +122,7 @@
 
 ### 🕸 Fetch nested children pages.
 - Pages inside non-page blocks are also fetched.
-- Max search-depth can be set in your preference.
+- Max request-depth can be set in your preference.
 - Main fetch loop uses nodejs timers, so it's safe from maxing out recursion depth.
 
 ### 🛠 Handle API Errors gracefully.
@@ -59,7 +140,7 @@
 - `/page/:id/` endpoint for retrieving page and its childrens' id.
 - `/tree/:id/` endpoint for retrieving all nested pages from the page.
   
-### 🔎 It builds basic page search indexes.
+### 🔎 It builds basic page search indexes (missing feature of the official Notion API).
 - Uses lunr.js.
 - Page's properties and chilren are converted into plain text for building search index.
 - `/search?keyword=` endpoint for searching page properties and retrieving page ids.
@@ -68,9 +149,10 @@
 ---
 
 ## Advices
-⚠️ This library is not for fetching the whole nested page. 
-- This library is for listing nested pages and their properties.
-- If you want to render the whole page, use `react-notion-x`.
+⚠️ This library is not for fetching the whole nested page content. 
+- This library is for listing nested pages to some depth and retrieve their properties.
+- Page's block children are fetched to boost up the search index results, not to display them.
+- If you want to render the whole page, use amazing libraries like `react-notion-x` (yet you should share your pages publically to the web).
 
 ⚠️ I recommend to keep `maxRequestDepth` lower than 5 and `maxBlockDepth` lower than 2. 
 - Increasing max request depth will increase request count exponentially
@@ -81,7 +163,6 @@
 ## Usage
 > See `./sample/index.ts` for full example file.
 	 
-
 ### `.env` File Configuration
 Write directly on `<package_root>/.env`
 ```text
@@ -180,8 +261,8 @@ async function use_more_options() {
 ```
 
 ---
-
 ## Entity Data Types
+
 ### `Entity`
 Entity that has `children` as direct reference.
 ```typescript
@@ -225,6 +306,7 @@ export interface Block {
 ```
 
 ---
+
 ## Fetch Result Data Types
 
 ### `NotionPageTree.prototype.page_collection`
@@ -252,7 +334,50 @@ search_suggestion: string[] | undefined;
 ```
 
 ---
-## How It Creates Fetch Queue (Flowchart)
+## How It Creates Fetch Queue 
+
+### NodeJS Promise Queue Example
+Try it on the Stackblitz.
+https://stackblitz.com/edit/react-sp2zy3?embed=1&file=src/job.js
+
+<div style="overflow-x: scroll !important; white-space: pre-wrap !important; width: 100%">
+<pre style="display: inline-block;">
+<code>
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  Request Ready Queue             ┃
+┃                                  ┃
+┃  ┌────────────┬────────────┐     ┃
+┃  │    job     │    job     │ ... ┃
+┃  │description │description │     ┃
+┃  └────────────┴────────────┘     ┃
+┃                      │           ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+                       │
+                         If promise
+                       └ queue has ─ ┐
+                         empty slot
+                                     │
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  Request Promise Queue             │      ┃
+┃                                    ▼      ┃
+┃ ┌────────────┐┌────────────┐┌ ─ ─ ─ ─ ─ ─ ┃
+┃ │ queryable  ││ queryable  │ (Empty Slot)│┃
+┃ │  promise   ││  promise   ││             ┃
+┃ └────────────┘└────────────┘ ─ ─ ─ ─ ─ ─ ┘┃
+┃        │                                  ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+         │
+
+    If promise
+    is setteled
+         │      ┌────────────┐
+                │  promise   │
+         └ ─ ─ ▶│ handler()  │
+                └────────────┘
+</code></pre></div>
+
+
+### Flowchart
 <div style="overflow-x: scroll !important; white-space: pre-wrap !important; width: 100%">
 <pre style="display: inline-block;">
 <code>/******************************************************************************************************************************************************************************************************************************************************************************************************************************\
@@ -400,5 +525,6 @@ search_suggestion: string[] | undefined;
 *                                                                                                                                                                                                                                                                                                                              *
 *                                                                                                                                                                                                                                                                                                                              *
 *                                                                                                                                                                                                                                                                                                                              *
-\******************************************************************************************************************************************************************************************************************************************************************************************************************************/</code></pre>
+\******************************************************************************************************************************************************************************************************************************************************************************************************************************/
+</code></pre>
 </div>
