@@ -34,6 +34,8 @@ async function use_more_options() {
 	const notionPageTree = new NotionPageTree({
 		private_file_path: path.resolve('./results/'), // path to save serialized page data
 
+		searchIndexing: false, // turn off search indexing
+
 		createFetchQueueOptions: {
 			maxConcurrency: 3,
 			// Current official rate limit is 3 requests per second. Notion api would likely to throw error when you increase this value.

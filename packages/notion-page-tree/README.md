@@ -4,10 +4,10 @@
 ![npm](https://img.shields.io/npm/v/notion-page-tree)
 ![size](https://img.shields.io/bundlephobia/minzip/notion-page-tree)
 ![prettier](https://img.shields.io/badge/codestyle-prettier-brightgreen)
+
 ---
 
 - [Notion Page Tree](#notion-page-tree)
-	- [!prettier](#)
 	- [Why Would I Want This?](#why-would-i-want-this)
 		- [🙌 Use the official Notion API.](#-use-the-official-notion-api)
 		- [🕸 Fetch nested children pages.](#-fetch-nested-children-pages)
@@ -16,11 +16,21 @@
 		- [💾 It saves fetch results to your local disk.](#-it-saves-fetch-results-to-your-local-disk)
 		- [🥞 It builds basic page server.](#-it-builds-basic-page-server)
 		- [🔎 It builds basic page search indexes.](#-it-builds-basic-page-search-indexes)
+	- [Advices](#advices)
 	- [Usage](#usage)
 		- [`.env` File Configuration](#env-file-configuration)
 		- [Basic Usage](#basic-usage)
 		- [Usage with More Options](#usage-with-more-options)
-	- [How It Works (Flowchart)](#how-it-works-flowchart)
+	- [Entity Data Types](#entity-data-types)
+		- [`Entity`](#entity)
+		- [`PlainEntity`](#plainentity)
+		- [`Page | Database | Block`](#page--database--block)
+	- [Fetch Result Data Types](#fetch-result-data-types)
+		- [`NotionPageTree.prototype.page_collection`](#notionpagetreeprototypepage_collection)
+		- [`NotionPageTree.prototype.root`](#notionpagetreeprototyperoot)
+		- [`NotionPageTree.prototype.search_index`](#notionpagetreeprototypesearch_index)
+		- [`NotionPageTree.prototype.search_suggestion`](#notionpagetreeprototypesearch_suggestion)
+	- [How It Creates Fetch Queue (Flowchart)](#how-it-creates-fetch-queue-flowchart)
 
 ---
 
@@ -32,6 +42,7 @@
 ### 🕸 Fetch nested children pages.
 - Pages inside non-page blocks are also fetched.
 - Max search-depth can be set in your preference.
+- Main fetch loop uses nodejs timers, so it's safe from maxing out recursion depth.
 
 ### 🛠 Handle API Errors gracefully.
 - Maximum fetch concurrency is set to avoid `rate_limited` error.
@@ -56,8 +67,20 @@
 
 ---
 
+## Advices
+⚠️ This library is not for fetching the whole nested page. 
+- This library is for listing nested pages and their properties.
+- If you want to render the whole page, use `react-notion-x`.
+
+⚠️ I recommend to keep `maxRequestDepth` lower than 5 and `maxBlockDepth` lower than 2. 
+- Increasing max request depth will increase request count exponentially
+- If you want to fetch deeply nested pages, don't put them under plain blocks. Rather put them directly on the page's root level.
+
+---
+
 ## Usage
 > See `./sample/index.ts` for full example file.
+	 
 
 ### `.env` File Configuration
 Write directly on `<package_root>/.env`
@@ -110,6 +133,8 @@ async function use_more_options() {
 	const notionPageTree = new NotionPageTree({
 		private_file_path: path.resolve('./results/'), // path to save serialized page data
 
+		searchIndexing: false, // turn off search indexing
+
 		createFetchQueueOptions: {
 			maxConcurrency: 3,
 			// Current official rate limit is 3 requests per second. Notion api would likely to throw error when you increase this value.
@@ -152,11 +177,82 @@ async function use_more_options() {
 		server.close();
 	}, 1000 * 30);
 }
-
-
 ```
 
-## How It Works (Flowchart)
+---
+
+## Entity Data Types
+### `Entity`
+Entity that has `children` as direct reference.
+```typescript
+type Entity = Commons & (Page | Database | Block);
+interface Commons {
+	id: string;
+	depth: number;
+	blockContentPlainText: string;
+	parent?: Entity;
+	children: Entity[];
+}
+```
+### `PlainEntity`
+Entity that has `children` as id.
+```typescript
+type FlatEntity = FlatCommons & (Page | Database | Block);
+interface FlatCommons {
+	id: string;
+	depth: number;
+	blockContentPlainText: string;
+	parent?: string;
+	children: string[];
+}
+```
+
+### `Page | Database | Block`
+Notion API's fetch request result for each entity types, with typed properties included.
+```ts
+export interface Page {
+	type: 'page';
+	metadata: Extract<GetPageResponse, { last_edited_time: string }>;
+}
+export interface Database {
+	type: 'database';
+	metadata: Extract<GetDatabaseResponse, { last_edited_time: string }>;
+}
+export interface Block {
+	type: 'block';
+	metadata: Extract<GetBlockResponse, { type: string }>;
+}
+```
+
+---
+## Fetch Result Data Types
+
+### `NotionPageTree.prototype.page_collection`
+Key, value collection of `id` and `PlainEntity`
+```ts
+page_collection: Record<string, FlatEntity> | undefined;
+```
+
+### `NotionPageTree.prototype.root`
+Root `Entity` that has nested children `Entity`s.
+```ts
+root: Entity | undefined;
+```
+
+### `NotionPageTree.prototype.search_index`
+`lunr.Index` built with `page_collection` entities' `blockContentPlainText`.
+```ts
+search_index: lunr.Index | undefined;
+```
+
+### `NotionPageTree.prototype.search_suggestion`
+Search tokens extracted from `lunr.Index`.
+```ts
+search_suggestion: string[] | undefined;
+```
+
+---
+## How It Creates Fetch Queue (Flowchart)
 <div style="overflow-x: scroll !important; white-space: pre-wrap !important; width: 100%">
 <pre style="display: inline-block;">
 <code>/******************************************************************************************************************************************************************************************************************************************************************************************************************************\

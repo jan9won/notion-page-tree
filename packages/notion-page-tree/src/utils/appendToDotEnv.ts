@@ -1,13 +1,14 @@
 import { DotenvParseOutput } from 'dotenv';
 import { writeFile } from 'fs/promises';
 import { EOL } from 'os';
+import { stdout } from './log';
 
 export const appendToDotEnv = async (
 	envFilePath: string,
 	newEnv: DotenvParseOutput,
 	env?: DotenvParseOutput
 ) => {
-	console.log(`Writing new variables to ${envFilePath}`);
+	stdout(`Writing new env variables to ${envFilePath}`);
 
 	await writeFile(
 		envFilePath,

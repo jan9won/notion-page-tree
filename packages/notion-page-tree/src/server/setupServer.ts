@@ -3,9 +3,11 @@ import { pageServerHandler } from './handlers/page';
 import { searchServerHandler } from './handlers/search';
 import { treeServerHandler } from './handlers/tree';
 import { suggestionServerHandler } from './handlers/suggestion';
+import { EOL } from 'os';
 import { type createFetchQueueReturnType } from '../fetcher';
 import { type Entity } from '../types';
 import type lunr from 'lunr';
+import { stdout } from '../utils/log';
 const app = express();
 
 interface setupServerParameters {
@@ -28,5 +30,5 @@ export const setupServer = ({
 	searchServerHandler(app, search_index);
 	suggestionServerHandler(app, search_suggestion);
 
-	return app.listen(port, () => console.log(`app listening ${[port]}`));
+	return app.listen(port, () => stdout(`Express server listening ${[port]}.`));
 };

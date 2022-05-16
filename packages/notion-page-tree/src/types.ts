@@ -45,7 +45,7 @@ export type GetPageResponseWithMetadata = Extract<
 >;
 export interface Page {
 	type: 'page';
-	metadata: GetPageResponseWithMetadata;
+	metadata: Extract<GetPageResponse, { last_edited_time: string }>;
 }
 export type QueryDatabaseResponseWithProperties = Extract<
 	QueryDatabaseResponse['results'][0],
@@ -59,7 +59,7 @@ export type GetDatabaseResponseWithMetadata = Extract<
 >;
 export interface Database {
 	type: 'database';
-	metadata: GetDatabaseResponseWithMetadata;
+	metadata: Extract<GetDatabaseResponse, { last_edited_time: string }>;
 }
 
 // Block Types
@@ -69,5 +69,5 @@ export type GetBlockResponseWithMetadata = Extract<
 >;
 export interface Block {
 	type: 'block';
-	metadata: GetBlockResponseWithMetadata;
+	metadata: Extract<GetBlockResponse, { type: string }>;
 }

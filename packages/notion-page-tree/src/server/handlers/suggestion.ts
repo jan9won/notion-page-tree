@@ -1,4 +1,4 @@
-import { type Router, type Request } from 'express';
+import { type Router } from 'express';
 export const suggestionServerHandler = (
 	app: Router,
 	search_suggestion: string[] | undefined

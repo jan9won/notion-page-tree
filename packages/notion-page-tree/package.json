@@ -1,6 +1,6 @@
 {
 	"name": "notion-page-tree",
-	"version": "1.0.4",
+	"version": "1.0.6",
 	"main": "./dist/index.js",
 	"license": "MIT",
 	"packageManager": "yarn@3.2.0",
@@ -22,7 +22,8 @@
 		"test:debug": "yarn test --debug --json --outputFile=./tests/testlog.json",
 		"serve": "ts-node sample/index.ts",
 		"build": "tsc -p tsconfig.json",
-		"publish": "yarn npm publish"
+		"publish": "yarn npm publish",
+		"lint": "yarn dlx eslint src"
 	},
 	"dependencies": {
 		"@notionhq/client": "^1.0.4",

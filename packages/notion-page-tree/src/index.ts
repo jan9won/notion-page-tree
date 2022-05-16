@@ -19,11 +19,14 @@ import { Client } from '@notionhq/client';
 import { askInput, askSelect } from './utils';
 import { appendToDotEnv } from './utils/appendToDotEnv';
 import dotenv from 'dotenv';
+import { EOL } from 'os';
+import { stderr, stdout } from './utils/log';
 // import { createHash } from 'crypto';
 
 interface NotionPageTreeParameters {
 	private_file_path?: string;
 	createFetchQueueOptions?: CreateFetchQueueOptions;
+	searchIndexing?: boolean;
 }
 
 export default class NotionPageTree {
@@ -32,7 +35,6 @@ export default class NotionPageTree {
 	root: Entity | undefined;
 	search_index: lunr.Index | undefined;
 	search_suggestion: string[] | undefined;
-	fetchLoopTimer?: NodeJS.Timeout;
 
 	// constructor initiated variables
 	private_file_path: string;
@@ -43,10 +45,13 @@ export default class NotionPageTree {
 		entry_type: undefined
 	};
 	createFetchQueueOptions: CreateFetchQueueOptions;
+	searchIndexing: boolean;
+	fetchLoopTimer?: NodeJS.Timeout;
 
 	constructor(options?: NotionPageTreeParameters) {
 		this.private_file_path = options?.private_file_path || './';
 		this.createFetchQueueOptions = options?.createFetchQueueOptions || {};
+		this.searchIndexing = options?.searchIndexing || true;
 	}
 
 	/**
@@ -90,23 +95,25 @@ export default class NotionPageTree {
 			) as Entity;
 
 			// create search index
-			const { idx, tkn } = createPageSearchIndex(this.page_collection, [
-				'description',
-				'curation'
-			]);
-			this.search_index = idx;
-			this.search_suggestion = tkn;
-			await writeFile(
-				path.resolve(this.private_file_path, 'search-suggestion.json'),
-				JSON.stringify(
-					JSON.parse(JSON.stringify(idx.toJSON())).invertedIndex.map(
-						(tokenSet: [string, unknown]) => tokenSet[0]
+			if (this.searchIndexing) {
+				const { idx, tkn } = createPageSearchIndex(this.page_collection, [
+					'description',
+					'curation'
+				]);
+				this.search_index = idx;
+				this.search_suggestion = tkn;
+				await writeFile(
+					path.resolve(this.private_file_path, 'search-suggestion.json'),
+					JSON.stringify(
+						JSON.parse(JSON.stringify(idx.toJSON())).invertedIndex.map(
+							(tokenSet: [string, unknown]) => tokenSet[0]
+						)
 					)
-				)
-			);
+				);
+			}
 		} else {
-			console.log(
-				'No previously fetched file. Page data variables will be undefined until the first fetch is completed'
+			stdout(
+				`No previously fetched file. Page data variables will be undefined until the first fetch is completed.`
 			);
 		}
 	}
@@ -178,11 +185,8 @@ export default class NotionPageTree {
 					},
 					envFile ? envFile : undefined
 				);
-			console.log(
-				`Reqparams written in .env file
-				id : ${this.requestParameters.entry_id}
-				key : ${this.requestParameters.entry_key}
-				type : ${this.requestParameters.entry_type}`
+			stdout(
+				`Reqparams written in .env file${EOL}id : ${this.requestParameters.entry_id}${EOL}key : ${this.requestParameters.entry_key}${EOL}type : ${this.requestParameters.entry_type}`
 			);
 		}
 
@@ -193,12 +197,17 @@ export default class NotionPageTree {
 			this.requestParameters.entry_type === undefined
 		) {
 			throw new Error(
-				`Can't find environment variables. 
-			Set ${this.requestParameters.entry_id === '' ? 'NOTION_ENTRY_ID, ' : ''}${
-					this.requestParameters.entry_key === '' ? 'NOTION_ENTRY_KEY, ' : ''
+				`Can't find environment variables.${EOL}Set ${
+					this.requestParameters.entry_id === '' ? `NOTION_ENTRY_ID${EOL}` : ''
 				}${
-					this.requestParameters.entry_type === '' ? 'NOTION_ENTRY_TYPE, ' : ''
-				}in .env file or provide them as parameters`
+					this.requestParameters.entry_key === ''
+						? `NOTION_ENTRY_KEY${EOL}`
+						: ''
+				}${
+					this.requestParameters.entry_type === ''
+						? `NOTION_ENTRY_TYPE${EOL}`
+						: ''
+				}in .env file.${EOL}${EOL}`
 			);
 		} else {
 			// else, return
@@ -237,21 +246,23 @@ export default class NotionPageTree {
 			JSON.stringify(this.root)
 		);
 
-		// create search index and write to local disk
-		const { idx, tkn } = createPageSearchIndex(this.page_collection, [
-			'description',
-			'curation'
-		]);
-		this.search_index = idx;
-		this.search_suggestion = tkn;
-		await writeFile(
-			path.resolve(this.private_file_path, 'search-suggestion.json'),
-			JSON.stringify(
-				JSON.parse(JSON.stringify(idx.toJSON())).invertedIndex.map(
-					(tokenSet: [string, unknown]) => tokenSet[0]
+		// create search index
+		if (this.searchIndexing) {
+			const { idx, tkn } = createPageSearchIndex(this.page_collection, [
+				'description',
+				'curation'
+			]);
+			this.search_index = idx;
+			this.search_suggestion = tkn;
+			await writeFile(
+				path.resolve(this.private_file_path, 'search-suggestion.json'),
+				JSON.stringify(
+					JSON.parse(JSON.stringify(idx.toJSON())).invertedIndex.map(
+						(tokenSet: [string, unknown]) => tokenSet[0]
+					)
 				)
-			)
-		);
+			);
+		}
 	}
 
 	/**
@@ -259,7 +270,7 @@ export default class NotionPageTree {
 	 */
 	async startFetchLoop(fetchInterval: number) {
 		await this.fetchOnce();
-		console.log(`Waiting ${fetchInterval} milliseconds for the next fetch.`);
+		stdout(`Waiting ${fetchInterval} milliseconds for the next fetch.`);
 		this.fetchLoopTimer = setTimeout(() => {
 			this.startFetchLoop(fetchInterval);
 		}, fetchInterval);
@@ -271,7 +282,7 @@ export default class NotionPageTree {
 	stopFetchLoop() {
 		this.fetchLoopTimer
 			? clearTimeout(this.fetchLoopTimer)
-			: console.error('fetch loop is not started yet');
+			: stderr('fetch loop is not started yet');
 	}
 
 	/**

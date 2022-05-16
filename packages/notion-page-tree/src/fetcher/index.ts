@@ -2,10 +2,10 @@ import { NotionClientError } from '@notionhq/client';
 import { Entity, FlatEntity, RequestParameters } from '../types';
 import { extractPlainTextFromBlock, blocksWithoutChildren } from './utils';
 import { makeQueryablePromise, QueryablePromise } from '../utils';
-import { EOL } from 'os';
 import { flattenEntity } from './utils/flattenEntity';
 import requestChildren from './utils/requestChildren';
 import { QueryDatabaseParameters } from '@notionhq/client/build/src/api-endpoints';
+import { stderr, stdout } from '../utils/log';
 
 export interface CreateFetchQueueOptions {
 	maxConcurrency?: number;
@@ -38,7 +38,7 @@ export const createFetchQueue = ({
 	requestParameters,
 	maxConcurrency = 3,
 	maxRequestDepth = 3,
-	maxBlockDepth = 3,
+	maxBlockDepth = 2,
 	maxRetry = 3,
 	databaseQueryFilter = undefined
 }: CreateFetchQueueParameters) => {
@@ -120,24 +120,22 @@ export const createFetchQueue = ({
 						promise.children.getRejectedValue().code === 'rate_limited';
 
 					if (!rate_limited) {
-						console.error('Retrying rejected request.');
+						stdout(`Retrying rejected request.`);
 						promise.retry < maxRetry
 							? request_ready_queue.unshift({
 									parentToAssign: promise.parentToAssign,
 									parentToRequest: promise.parentToRequest,
 									retry: promise.retry + 1
 							  })
-							: console.error(
-									`${EOL}Max retry count reached requesting children of ${promise.parentToRequest.type} ${promise.parentToRequest.id}`
+							: stderr(
+									`Max retry count reached requesting children of ${promise.parentToRequest.type} ${promise.parentToRequest.id}.`
 							  );
 						// remove from promise queue
 						request_promise_queue.splice(idx, 1);
 					}
 
 					if (rate_limited) {
-						console.warn(
-							`${EOL}Flushing promise queue and waiting 3 minutes from now...${EOL}`
-						);
+						stdout(`Flushing promise queue and waiting 3 minutes from now...`);
 						const previousConcurrency = maxConcurrency;
 						maxConcurrency = 0;
 						request_ready_queue.push(
@@ -150,7 +148,7 @@ export const createFetchQueue = ({
 						// reset error delay timer
 						errorTimeout && clearTimeout(errorTimeout);
 						errorTimeout = setTimeout(() => {
-							console.log('Restarting request...');
+							stdout(`Restarting request...`);
 							maxConcurrency = previousConcurrency;
 						}, 1000 * 60 * 3);
 					}
@@ -162,12 +160,12 @@ export const createFetchQueue = ({
 						// update max depth, report
 						if (currentMaxDepth < child.depth) {
 							currentMaxDepth = child.depth;
-							console.log(
-								`${EOL}Request depth reached ${currentMaxDepth}, with ${
+							stdout(
+								`Request depth reached ${currentMaxDepth}, with ${
 									Object.keys(page_collection).length
 								} pages traversed, ${currentRequestCount} requests made, and ${
 									request_ready_queue.length
-								} left to be requested.${EOL}`
+								} left to be requested.`
 							);
 						}
 
@@ -242,7 +240,7 @@ export function createFetchQueueWatcher({
 	page_collection,
 	rootEntity
 }: createFetchQueueReturnType) {
-	console.log('Waiting for fetch queue to resolve...');
+	stdout(`Waiting for fetch queue to resolve...`);
 
 	// check for routines
 	return new Promise<{
