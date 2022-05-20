@@ -1,17 +1,17 @@
 import { type Router, type Request } from 'express';
-import type lunr from 'lunr';
+import { NotionPageTreeDataSet } from '../..';
 export const searchServerHandler = (
 	app: Router,
-	search_index: lunr.Index | undefined
+	data_set: NotionPageTreeDataSet
 ) => {
 	app.get(
 		'/search',
 		(req: Request<unknown, unknown, unknown, { keyword: string }>, res) => {
-			search_index
+			data_set.search_index
 				? req.query.keyword && req.query.keyword !== ''
 					? res.send(
 							JSON.stringify(
-								search_index.search(
+								data_set.search_index.search(
 									`${req.query.keyword
 										.split(' ')
 										.map(

@@ -23,18 +23,23 @@ import { EOL } from 'os';
 import { stderr, stdout } from './utils/log';
 // import { createHash } from 'crypto';
 
-interface NotionPageTreeParameters {
+export interface NotionPageTreeParameters {
 	private_file_path?: string;
 	createFetchQueueOptions?: CreateFetchQueueOptions;
 	searchIndexing?: boolean;
 }
 
-export default class NotionPageTree {
+export interface NotionPageTreeDataSet {
 	// Variables holding page data
 	page_collection: Record<string, FlatEntity> | undefined;
 	root: Entity | undefined;
 	search_index: lunr.Index | undefined;
 	search_suggestion: string[] | undefined;
+}
+
+export default class NotionPageTree {
+	// Variables holding page data
+	data_set: NotionPageTreeDataSet;
 
 	// constructor initiated variables
 	private_file_path: string;
@@ -52,6 +57,12 @@ export default class NotionPageTree {
 		this.private_file_path = options?.private_file_path || './';
 		this.createFetchQueueOptions = options?.createFetchQueueOptions || {};
 		this.searchIndexing = options?.searchIndexing || true;
+		this.data_set = {
+			page_collection: undefined,
+			root: undefined,
+			search_index: undefined,
+			search_suggestion: undefined
+		};
 	}
 
 	/**
@@ -81,14 +92,14 @@ export default class NotionPageTree {
 		// If files exist
 		if (treeFileExists && collectionFileExists) {
 			// Read and parse files
-			this.page_collection = JSON.parse(
+			this.data_set.page_collection = JSON.parse(
 				(
 					await readFile(
 						path.resolve(this.private_file_path, 'collection.json')
 					)
 				).toString()
 			) as Record<string, FlatEntity>;
-			this.root = JSON.parse(
+			this.data_set.root = JSON.parse(
 				(
 					await readFile(path.resolve(this.private_file_path, 'tree.json'))
 				).toString()
@@ -96,12 +107,12 @@ export default class NotionPageTree {
 
 			// create search index
 			if (this.searchIndexing) {
-				const { idx, tkn } = createPageSearchIndex(this.page_collection, [
-					'description',
-					'curation'
-				]);
-				this.search_index = idx;
-				this.search_suggestion = tkn;
+				const { idx, tkn } = createPageSearchIndex(
+					this.data_set.page_collection,
+					['description', 'curation']
+				);
+				this.data_set.search_index = idx;
+				this.data_set.search_suggestion = tkn;
 				await writeFile(
 					path.resolve(this.private_file_path, 'search-suggestion.json'),
 					JSON.stringify(
@@ -233,27 +244,27 @@ export default class NotionPageTree {
 		});
 
 		const fetchResult = await createFetchQueueWatcher(fetchQueue);
-		this.page_collection = fetchResult.page_collection;
-		this.root = fetchResult.root;
+		this.data_set.page_collection = fetchResult.page_collection;
+		this.data_set.root = fetchResult.root;
 
 		// write fetch results to local disk for caching
 		await writeFile(
 			path.resolve(this.private_file_path, 'collection.json'),
-			JSON.stringify(this.page_collection)
+			JSON.stringify(this.data_set.page_collection)
 		);
 		await writeFile(
 			path.resolve(this.private_file_path, 'tree.json'),
-			JSON.stringify(this.root)
+			JSON.stringify(this.data_set.root)
 		);
 
 		// create search index
 		if (this.searchIndexing) {
-			const { idx, tkn } = createPageSearchIndex(this.page_collection, [
-				'description',
-				'curation'
-			]);
-			this.search_index = idx;
-			this.search_suggestion = tkn;
+			const { idx, tkn } = createPageSearchIndex(
+				this.data_set.page_collection,
+				['description', 'curation']
+			);
+			this.data_set.search_index = idx;
+			this.data_set.search_suggestion = tkn;
 			await writeFile(
 				path.resolve(this.private_file_path, 'search-suggestion.json'),
 				JSON.stringify(
@@ -290,12 +301,6 @@ export default class NotionPageTree {
 	 */
 	setupServer({ port }: { port: number }) {
 		// create server
-		return setupServer({
-			port: port,
-			page_collection: this.page_collection,
-			root: this.root,
-			search_index: this.search_index,
-			search_suggestion: this.search_suggestion
-		});
+		return setupServer(port, this.data_set);
 	}
 }

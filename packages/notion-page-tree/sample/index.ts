@@ -22,13 +22,13 @@ async function simple_use() {
 
 	setTimeout(() => {
 		notionPageTree.stopFetchLoop();
-		// Stopping fetch loop immediately.
+		// Stopping fetch loop after 30 seconds.
 
 		server.close();
-		// Stopping servers immediately.
+		// Stopping servers after 30 seconds.
 	}, 1000 * 30);
 }
-simple_use();
+// simple_use();
 
 async function use_more_options() {
 	const notionPageTree = new NotionPageTree({
@@ -43,7 +43,7 @@ async function use_more_options() {
 			maxRetry: 2,
 			// How many times errored request are retried ("rate_limited" error will wait some minutes before retrying)
 
-			maxRequestDepth: 3,
+			maxRequestDepth: 10,
 			// Search depth applied to all the entities.
 
 			maxBlockDepth: 2,
@@ -58,9 +58,9 @@ async function use_more_options() {
 			}
 		}
 	});
+	const server = notionPageTree.setupServer({ port: 8888 });
 
 	await notionPageTree.parseCachedDocument();
-	const server = notionPageTree.setupServer({ port: 8888 });
 
 	await notionPageTree.setRequestParameters({
 		prompt: true,
@@ -69,12 +69,13 @@ async function use_more_options() {
 		forceRewrite: false
 		// Prompt and rewrite .env even if parameters exist.
 	});
-	await notionPageTree.fetchOnce();
 
-	notionPageTree.startFetchLoop(1000 * 10);
+	notionPageTree.startFetchLoop(1000 * 60 * 3);
 
-	setTimeout(() => {
-		notionPageTree.stopFetchLoop();
-		server.close();
-	}, 1000 * 30);
+	// setTimeout(() => {
+	// 	notionPageTree.stopFetchLoop();
+	// 	server.close();
+	// }, 1000 * 30);
 }
+
+use_more_options();

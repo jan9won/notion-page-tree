@@ -1,30 +1,34 @@
 import { type Router } from 'express';
-import { createFetchQueueReturnType } from '../../fetcher';
+import { NotionPageTreeDataSet } from '../..';
 import { convertNotionId } from '../utils/convertNotionId';
+import { retrieveSubtree } from '../utils/retrieveSubtree';
 export const treeServerHandler = (
 	router: Router,
-	root: createFetchQueueReturnType['rootEntity'] | undefined
+	data_set: NotionPageTreeDataSet
 ) => {
-	router.get<{ id: string }>('/tree/:id', (req, res) => {
-		const convertedId = convertNotionId(req.params.id, 'dashed');
-		root
-			? req.params.id && convertedId !== false
-				? res.send(JSON.stringify(findSubtreeRecursively(root, convertedId)))
-				: res.sendStatus(502)
-			: res.sendStatus(503);
-	});
-};
-
-const findSubtreeRecursively = (
-	root: createFetchQueueReturnType['rootEntity'],
-	id: string
-) => {
-	const subRoot = root.children.find(entity => entity.id === id);
-	if (subRoot === undefined) {
-		root.children.forEach(child => {
-			findSubtreeRecursively(child, id);
-		});
-	} else {
-		return subRoot;
-	}
+	router.get<{ id: string }, unknown, unknown, { depth?: string }>(
+		'/tree/:id',
+		(req, res) => {
+			const convertedId = convertNotionId(req.params.id, 'dashed');
+			let treeDepth;
+			try {
+				treeDepth = req.query.depth ? parseInt(req.query.depth) : undefined;
+			} catch (e) {
+				res
+					.status(400)
+					.send(
+						`Query parameter 'depth' should be an integer. Provided ${req.query.depth}.`
+					);
+			}
+			data_set.root
+				? req.params.id && convertedId !== false
+					? res.send(
+							JSON.stringify(
+								retrieveSubtree(data_set.root, convertedId, treeDepth)
+							)
+					  )
+					: res.sendStatus(502)
+				: res.sendStatus(503);
+		}
+	);
 };

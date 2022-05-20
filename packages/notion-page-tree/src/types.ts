@@ -18,6 +18,15 @@ export interface RequestParameters {
 //
 export type NormalizedEntryType = ReturnType<typeof normalizeBlockType>;
 
+export type SubTreeEntity = SubTreeCommons & (Page | Database | Block);
+export interface SubTreeCommons {
+	id: string;
+	depth: number;
+	blockContentPlainText: string;
+	parent?: string;
+	children: string[] | SubTreeEntity[];
+}
+
 // Plain page without recursive reference link.
 export type FlatEntity = FlatCommons & (Page | Database | Block);
 export interface FlatCommons {

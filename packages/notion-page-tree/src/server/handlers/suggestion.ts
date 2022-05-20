@@ -1,7 +1,8 @@
 import { type Router } from 'express';
+import { NotionPageTreeDataSet } from '../..';
 export const suggestionServerHandler = (
 	app: Router,
-	search_suggestion: string[] | undefined
+	data_set: NotionPageTreeDataSet
 ) => {
 	// app.get(
 	// 	'/suggestion',
@@ -19,8 +20,8 @@ export const suggestionServerHandler = (
 	// 	}
 	// );
 	app.get('/suggestion', (req, res) => {
-		search_suggestion
-			? res.send(JSON.stringify(search_suggestion))
+		data_set.search_suggestion
+			? res.send(JSON.stringify(data_set.search_suggestion))
 			: res.sendStatus(503);
 	});
 };
