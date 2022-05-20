@@ -32,7 +32,7 @@ async function simple_use() {
 
 async function use_more_options() {
 	const notionPageTree = new NotionPageTree({
-		private_file_path: path.resolve('./results/'), // path to save serialized page data
+		private_file_path: path.resolve('./sample/'), // path to save serialized page data
 
 		searchIndexing: false, // turn off search indexing
 

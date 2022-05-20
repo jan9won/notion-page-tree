@@ -9,6 +9,7 @@ export default async (): Promise<Config.InitialOptions> => {
 		// setupFilesAfterEnv: [path.resolve('./tests/msw-setup.ts')],
 		transform: {
 			'^.+\\.[tj]sx?$': 'babel-jest'
-		}
+		},
+		testPathIgnorePatterns: ['dist']
 	};
 };

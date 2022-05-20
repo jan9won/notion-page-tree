@@ -1,14 +1,14 @@
 {
 	"numFailedTestSuites": 0,
 	"numFailedTests": 0,
-	"numPassedTestSuites": 4,
-	"numPassedTests": 12,
+	"numPassedTestSuites": 1,
+	"numPassedTests": 1,
 	"numPendingTestSuites": 0,
 	"numPendingTests": 0,
 	"numRuntimeErrorTestSuites": 0,
 	"numTodoTests": 0,
-	"numTotalTestSuites": 4,
-	"numTotalTests": 12,
+	"numTotalTestSuites": 1,
+	"numTotalTests": 1,
 	"openHandles": [],
 	"snapshot": {
 		"added": 0,
@@ -19,149 +19,31 @@
 		"filesRemovedList": [],
 		"filesUnmatched": 0,
 		"filesUpdated": 0,
-		"matched": 1,
-		"total": 1,
+		"matched": 0,
+		"total": 0,
 		"unchecked": 0,
 		"uncheckedKeysByFile": [],
 		"unmatched": 0,
 		"updated": 0
 	},
-	"startTime": 1650625886672,
+	"startTime": 1653017367847,
 	"success": true,
 	"testResults": [
 		{
 			"assertionResults": [
 				{
-					"ancestorTitles": ["counter slice"],
+					"ancestorTitles": ["ArticleList"],
 					"failureMessages": [],
-					"fullName": "counter slice sets initial state",
+					"fullName": "ArticleList Renders correctly.",
 					"location": null,
 					"status": "passed",
-					"title": "sets initial state"
-				},
-				{
-					"ancestorTitles": ["counter slice"],
-					"failureMessages": [],
-					"fullName": "counter slice increase 2 counts",
-					"location": null,
-					"status": "passed",
-					"title": "increase 2 counts"
-				},
-				{
-					"ancestorTitles": ["counter slice"],
-					"failureMessages": [],
-					"fullName": "counter slice decrease 2 counts",
-					"location": null,
-					"status": "passed",
-					"title": "decrease 2 counts"
-				},
-				{
-					"ancestorTitles": ["counter slice"],
-					"failureMessages": [],
-					"fullName": "counter slice reset counts",
-					"location": null,
-					"status": "passed",
-					"title": "reset counts"
-				},
-				{
-					"ancestorTitles": ["counter slice"],
-					"failureMessages": [],
-					"fullName": "counter slice set waiting state to true",
-					"location": null,
-					"status": "passed",
-					"title": "set waiting state to true"
-				},
-				{
-					"ancestorTitles": ["counter slice"],
-					"failureMessages": [],
-					"fullName": "counter slice set waiting state to false",
-					"location": null,
-					"status": "passed",
-					"title": "set waiting state to false"
+					"title": "Renders correctly."
 				}
 			],
-			"endTime": 1650625887464,
+			"endTime": 1653017368522,
 			"message": "",
-			"name": "/Users/jangwonsuh/Documents/GitHub/neolambda/packages/ui/src/redux/sample/__tests__/counterSlice.test.ts",
-			"startTime": 1650625887070,
-			"status": "passed",
-			"summary": ""
-		},
-		{
-			"assertionResults": [
-				{
-					"ancestorTitles": ["catSlice"],
-					"failureMessages": [],
-					"fullName": "catSlice sets initial state",
-					"location": null,
-					"status": "passed",
-					"title": "sets initial state"
-				},
-				{
-					"ancestorTitles": ["catSlice"],
-					"failureMessages": [],
-					"fullName": "catSlice fetchRequested() requests 10 cat images",
-					"location": null,
-					"status": "passed",
-					"title": "fetchRequested() requests 10 cat images"
-				},
-				{
-					"ancestorTitles": ["catSlice"],
-					"failureMessages": [],
-					"fullName": "catSlice fetchSucceed() sets cats and fetchStatus",
-					"location": null,
-					"status": "passed",
-					"title": "fetchSucceed() sets cats and fetchStatus"
-				},
-				{
-					"ancestorTitles": ["catSlice"],
-					"failureMessages": [],
-					"fullName": "catSlice fetchFailed() sets fetchStatus",
-					"location": null,
-					"status": "passed",
-					"title": "fetchFailed() sets fetchStatus"
-				}
-			],
-			"endTime": 1650625887611,
-			"message": "",
-			"name": "/Users/jangwonsuh/Documents/GitHub/neolambda/packages/ui/src/redux/sample/__tests__/catSlice.test.ts",
-			"startTime": 1650625887480,
-			"status": "passed",
-			"summary": ""
-		},
-		{
-			"assertionResults": [
-				{
-					"ancestorTitles": [],
-					"failureMessages": [],
-					"fullName": "Counter.tsx",
-					"location": null,
-					"status": "passed",
-					"title": "Counter.tsx"
-				}
-			],
-			"endTime": 1650625887888,
-			"message": "",
-			"name": "/Users/jangwonsuh/Documents/GitHub/neolambda/packages/ui/src/components/Sample/__tests__/Counter.test.tsx",
-			"startTime": 1650625887617,
-			"status": "passed",
-			"summary": ""
-		},
-		{
-			"assertionResults": [
-				{
-					"ancestorTitles": ["counterThunk"],
-					"failureMessages": [],
-					"fullName": "counterThunk requests for random number",
-					"location": null,
-					"status": "passed",
-					"title": "requests for random number"
-				}
-			],
-			"endTime": 1650625888633,
-			"message": "",
-			"name": "/Users/jangwonsuh/Documents/GitHub/neolambda/packages/ui/src/redux/sample/__tests__/counterThunk.test.ts",
-			"startTime": 1650625887070,
+			"name": "/Users/jangwonsuh/Documents/GitHub/notion-page-tree/packages/ui/src/components/__tests__/ArticleList.test.tsx",
+			"startTime": 1653017368171,
 			"status": "passed",
 			"summary": ""
 		}

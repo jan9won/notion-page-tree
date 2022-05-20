@@ -6,5 +6,6 @@ describe('ArticleList', () => {
 	it('Renders correctly.', () => {
 		//
 		render(<ArticleList></ArticleList>);
+		expect(true).toBe(true);
 	});
 });

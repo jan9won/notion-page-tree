@@ -1,6 +1,6 @@
 import { retrieveSubtree } from '../retrieveSubtree';
 import { Entity } from '../../../types';
-import tree from '../../../../tests/mockData/tree.json';
+import tree from './mockData/tree.json';
 
 describe('retrieveSubtree', () => {
 	it('', () => {

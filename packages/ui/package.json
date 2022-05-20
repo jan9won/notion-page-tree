@@ -2,7 +2,7 @@
 	"name": "ui",
 	"scripts": {
 		"dev": "webpack serve --config webpack.dev.js",
-		"test": "jest ./src --maxWorkers 2",
+		"test": "jest ./src/**/* --maxWorkers 2",
 		"test:watch": "yarn test --watch",
 		"test:debug": "yarn test --debug --json --outputFile=./tests/testlog.json",
 		"build": "webpack --config webpack.prod.js",
