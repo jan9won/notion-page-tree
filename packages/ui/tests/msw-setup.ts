@@ -9,7 +9,7 @@ global.fetch = fetch;
 // msw server handlers
 const handlers = [
 	rest.get('https://www.random.org/integers/', (req, res, ctx) => {
-		return res(ctx.delay(1000), ctx.text('10'));
+		return res(ctx.text('10'));
 	})
 ];
 
