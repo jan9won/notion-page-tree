@@ -632,8 +632,8 @@
 				"icon": {
 					"type": "file",
 					"file": {
-						"url": "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/88cfab53-9e60-4431-9b5c-439ea10f4304/neo.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220523%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220523T073616Z&X-Amz-Expires=3600&X-Amz-Signature=ca2104ab31a3c4238a664787138bfc3d8ce6840c45a7172e9e5aeb61b6757efd&X-Amz-SignedHeaders=host&x-id=GetObject",
-						"expiry_time": "2022-05-23T08:36:16.370Z"
+						"url": "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/88cfab53-9e60-4431-9b5c-439ea10f4304/neo.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220602%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220602T055249Z&X-Amz-Expires=3600&X-Amz-Signature=1d4cb4a6e2a12c0f4ebd56fb5580bf141decf362fb40f3e4e31969d234f164ba&X-Amz-SignedHeaders=host&x-id=GetObject",
+						"expiry_time": "2022-06-02T06:52:49.139Z"
 					}
 				},
 				"parent": {

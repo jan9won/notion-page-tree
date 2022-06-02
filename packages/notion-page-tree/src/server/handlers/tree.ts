@@ -2,6 +2,7 @@ import { type Router } from 'express';
 import { NotionPageTreeDataSet } from '../..';
 import { convertNotionId } from '../utils/convertNotionId';
 import { retrieveSubtree } from '../utils/retrieveSubtree';
+import { buildPageTreeToDepth } from '../utils/buildPageTreeToDepth';
 export const treeServerHandler = (
 	router: Router,
 	data_set: NotionPageTreeDataSet
@@ -20,11 +21,19 @@ export const treeServerHandler = (
 						`Query parameter 'depth' should be an integer. Provided ${req.query.depth}.`
 					);
 			}
-			data_set.root
+			// data_set.root
+			data_set.page_collection
 				? req.params.id
 					? res.send(
+							// JSON.stringify(
+							// 	retrieveSubtree(data_set.root, convertedId, treeDepth)
+							// )
 							JSON.stringify(
-								retrieveSubtree(data_set.root, convertedId, treeDepth)
+								buildPageTreeToDepth(
+									data_set.page_collection,
+									convertedId,
+									treeDepth
+								)
 							)
 					  )
 					: res.sendStatus(502)
