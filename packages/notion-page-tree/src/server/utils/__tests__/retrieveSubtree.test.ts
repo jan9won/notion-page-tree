@@ -3,7 +3,7 @@ import { Entity } from '../../../types';
 import tree from './mockData/tree.json';
 
 describe('retrieveSubtree', () => {
-	it('', () => {
+	it('Finds and returns subtree to given depth.', () => {
 		const subTree = retrieveSubtree(
 			tree as unknown as Entity,
 			'7d4bffca-f28a-49bf-b50f-ccad48896958',

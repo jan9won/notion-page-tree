@@ -21,6 +21,7 @@ import { appendToDotEnv } from './utils/appendToDotEnv';
 import dotenv from 'dotenv';
 import { EOL } from 'os';
 import { stderr, stdout } from './utils/log';
+import { convertNotionId } from './server/utils/convertNotionId';
 // import { createHash } from 'crypto';
 
 export interface NotionPageTreeParameters {
@@ -163,21 +164,20 @@ export default class NotionPageTree {
 		// If some env does not exist and prompt option is true,
 		// Or forceRewrite option is true,
 		// Ask for user input.
-		if (forceRewrite || prompt) {
-			this.requestParameters.entry_id === undefined &&
+		if (prompt) {
+			(this.requestParameters.entry_id === undefined || forceRewrite) &&
 				prompt &&
-				(this.requestParameters.entry_id = await askInput(
-					'entry_id',
-					"Enter root block's id",
-					true
+				(this.requestParameters.entry_id = convertNotionId(
+					await askInput('entry_id', "Enter root block's id", true),
+					'dashed'
 				));
-			this.requestParameters.entry_key === undefined &&
+			(this.requestParameters.entry_key === undefined || forceRewrite) &&
 				(this.requestParameters.entry_key = await askInput(
 					'entry_key',
 					"Enter root block's key",
 					true
 				));
-			this.requestParameters.entry_type === undefined &&
+			(this.requestParameters.entry_type === undefined || forceRewrite) &&
 				(this.requestParameters.entry_type =
 					await askSelect<NormalizedEntryType>(
 						['database', 'page', 'block'],

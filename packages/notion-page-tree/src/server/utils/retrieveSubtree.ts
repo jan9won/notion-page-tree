@@ -13,13 +13,15 @@ export const retrieveSubtree = (
 ) => {
 	// find subtree
 	const subTree = findSubtreeWithId(root, id);
+	// console.log('subtree', subTree?.id, subTree?.children);
 
-	// cut subtree
-	return subTree
-		? maxDepth !== undefined
-			? cutSubtreeToDepth(subTree as SubTreeEntity, maxDepth)
-			: subTree
-		: undefined;
+	const result = subTree
+		? maxDepth === undefined
+			? subTree
+			: cutSubtreeToDepth(subTree as SubTreeEntity, maxDepth)
+		: root;
+	// console.log('result', result.id, result.children);
+	return result;
 };
 
 const findSubtreeWithId = (root: Entity, id: string) => {
@@ -29,9 +31,8 @@ const findSubtreeWithId = (root: Entity, id: string) => {
 	search_queue.push(root);
 	while (search_queue.length > 0 && subtree === undefined) {
 		const current = search_queue.splice(0, 1)[0];
-		current.id === id
-			? (subtree = current)
-			: search_queue.push(...current.children);
+		if (current.id === id) return (subtree = current);
+		search_queue.push(...current.children);
 	}
 	return subtree;
 };
@@ -43,11 +44,14 @@ export const cutSubtreeToDepth = (
 ) => {
 	// DFS
 	if (_currentDepth >= maxDepth) {
-		root.children = root.children.map(ownChild => (ownChild as Entity).id);
+		root.children = root.children.map(ownChild =>
+			typeof ownChild === 'string' ? ownChild : ownChild.id
+		);
 	} else {
-		root.children.forEach(child => {
-			cutSubtreeToDepth(child as SubTreeEntity, maxDepth, _currentDepth + 1);
-		});
+		root.children &&
+			root.children.forEach(child => {
+				cutSubtreeToDepth(child as SubTreeEntity, maxDepth, _currentDepth + 1);
+			});
 	}
 	return root;
 };

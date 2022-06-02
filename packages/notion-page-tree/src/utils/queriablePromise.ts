@@ -8,6 +8,7 @@ interface queryablePromiseProperties<T, E> {
 	getResolvedValue: () => T;
 	getRejectedValue: () => E;
 	getPayloadValue: () => unknown;
+	abort: () => boolean;
 }
 
 export function makeQueryablePromise<T, E>(

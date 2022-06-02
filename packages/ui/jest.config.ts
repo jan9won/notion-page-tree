@@ -7,7 +7,7 @@ export default async (): Promise<Config.InitialOptions> => {
 		globalSetup: path.resolve('./tests/globalSetup.js'),
 		globalTeardown: path.resolve('./tests/globalTeardown.js'),
 		// preset: 'ts-jest',
-		setupFilesAfterEnv: [path.resolve('./tests/msw-setup.ts')],
+		setupFilesAfterEnv: [path.resolve('./tests/mocks/node.ts')],
 		transform: {
 			// "^.+\\.tsx?$": "ts-jest",
 			'^.+\\.[tj]sx?$': 'babel-jest'

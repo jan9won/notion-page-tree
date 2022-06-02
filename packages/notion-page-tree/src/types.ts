@@ -24,7 +24,7 @@ export interface SubTreeCommons {
 	depth: number;
 	blockContentPlainText: string;
 	parent?: string;
-	children: string[] | SubTreeEntity[];
+	children: (string | SubTreeEntity)[];
 }
 
 // Plain page without recursive reference link.

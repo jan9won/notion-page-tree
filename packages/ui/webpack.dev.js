@@ -12,6 +12,7 @@ module.exports = merge(config, {
 			directory: path.join(__dirname, 'dist')
 		},
 		port: 9000,
+		host: 'jan9won.local',
 		compress: true, // gzip everything served
 		historyApiFallback: true, // paths other than root (/) will also be served with index file. This is required for SPAs.
 		open: false // open default browser on devserver setup

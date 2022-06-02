@@ -22,6 +22,7 @@ module.exports = {
 
 	// MODULES TO RESOLVE
 	resolve: {
+		modules: [path.resolve('./src'), 'node_modules'],
 		extensions: ['.js', '.jsx', '.ts', '.tsx']
 		// Tell webpack will attempt to look for all the extensions above.
 		// When there are same file names with different extensions, webpack will resolve the extension listed first in this array.

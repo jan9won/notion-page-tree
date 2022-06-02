@@ -1,7 +1,10 @@
 {
 	"name": "notion-page-tree",
-	"version": "1.0.16",
+	"version": "1.0.17",
 	"main": "./dist/index.js",
+	"files": [
+		"dist/**/*"
+	],
 	"license": "MIT",
 	"packageManager": "yarn@3.2.0",
 	"homepage": "https://github.com/jan9won/notion-page-tree/tree/main/packages/notion-page-tree/#readme",

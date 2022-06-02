@@ -21,7 +21,7 @@ export const treeServerHandler = (
 					);
 			}
 			data_set.root
-				? req.params.id && convertedId !== false
+				? req.params.id
 					? res.send(
 							JSON.stringify(
 								retrieveSubtree(data_set.root, convertedId, treeDepth)
