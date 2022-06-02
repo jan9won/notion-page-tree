@@ -1,0 +1,1 @@
+Run `yarn workspace record-map-server serve`

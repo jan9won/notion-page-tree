@@ -1,11 +1,11 @@
 // import '@testing-library/react';
 import { setupServer } from 'msw/node';
-import { treeHandler } from './handlers';
+import handlers from './handlers';
 import fetch from 'cross-fetch';
 global.fetch = fetch;
 
 // create server instance
-const server = setupServer(...[treeHandler]);
+const server = setupServer(...handlers);
 
 // Start server before each test suite.
 beforeAll(() => server.listen());

@@ -1,0 +1,7 @@
+@import '~react-notion-x/src/styles.css';
+@import '~normalize.css';
+
+html,
+body {
+	background-color: black;
+}

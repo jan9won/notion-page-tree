@@ -12,8 +12,6 @@ export const buildPageTreeToDepth = (
 		const currentNode = queue.shift();
 		if (currentNode !== undefined && currentNode.children) {
 			currentNode.children = currentNode.children.map(child => {
-				// console.log(collection[child as string].depth - root.depth);
-
 				if (collection[child as string].depth - root.depth < maxDepth) {
 					const childRef = { ...collection[child as string] };
 					queue.push(childRef);

@@ -1,8 +1,10 @@
 import { rest } from 'msw';
 import { retrieveSubtree } from 'notion-page-tree/src/server/utils/retrieveSubtree';
+import { buildPageTreeToDepth } from 'notion-page-tree/src/server/utils/buildPageTreeToDepth';
 import { convertNotionId } from 'notion-page-tree/src/server/utils/convertNotionId';
-import { Entity } from 'notion-page-tree/dist/types';
+import { Entity, FlatEntity } from 'notion-page-tree/dist/types';
 import tree from '../../../../notion-page-tree/sample/tree.json';
+import collection from '../../../../notion-page-tree/sample/collection.json';
 
 export const treeHandler = rest.get<undefined, { id: string }>(
 	'http://localhost:8000/tree/:id',
@@ -24,11 +26,15 @@ export const treeHandler = rest.get<undefined, { id: string }>(
 			);
 		}
 
-		return tree
+		return collection
 			? req.params.id
 				? res(
 						ctx.json(
-							retrieveSubtree(tree as unknown as Entity, convertedId, treeDepth)
+							buildPageTreeToDepth(
+								collection as unknown as Record<string, FlatEntity>,
+								convertedId,
+								treeDepth
+							)
 						)
 				  )
 				: res(ctx.status(502))

@@ -17,7 +17,8 @@ module.exports = {
 			return pathData.chunk.name === 'index'
 				? '[name].[contenthash].bundle.js'
 				: '[name]/[name].[contenthash].bundle.js';
-		}
+		},
+		publicPath: '/'
 	},
 
 	// MODULES TO RESOLVE
@@ -37,8 +38,8 @@ module.exports = {
 				// match modules with regex
 				// exclude: /node_modules/,
 				include: {
-					not: /node_modules/
-					// and: /some-package/
+					// and: [/react-notion-x/],
+					not: [/node_modules/]
 				},
 				// exclude node_modules, transpiling packages will cause problems
 				loader: 'babel-loader'

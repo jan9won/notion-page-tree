@@ -1,3 +1,4 @@
 import { treeHandler } from './tree';
+import { recordMapHandler } from './recordmap';
 
-export { treeHandler };
+export default [treeHandler, recordMapHandler];

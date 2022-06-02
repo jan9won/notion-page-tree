@@ -14,24 +14,23 @@ import {
 } from '@mui/material';
 import { Share } from '@mui/icons-material';
 import ArticleModal from './ArticleModal';
+import { useEffect, useState } from 'react';
 
 const ArticleList = ({ rootId }: { rootId: string }) => {
-	const [rootArticleList, setRootArticleList] = React.useState(
-		[] as SubTreeEntity[]
-	);
+	const [rootArticleList, setRootArticleList] = useState([] as SubTreeEntity[]);
 	const fetchAndSetRootArticleList = async () => {
-		const fetchResult = await fetchPageTree(rootId, 1);
+		const fetchResult = await fetchPageTree(rootId, 2);
 		setRootArticleList(fetchResult.children as SubTreeEntity[]);
 	};
-	React.useEffect(() => {
+	useEffect(() => {
 		fetchAndSetRootArticleList();
 		return () => {
 			//
 		};
 	}, []);
 
-	const [modalOpen, setModalOpen] = React.useState(false);
-	const [modalId, setModalId] = React.useState<string>(undefined);
+	const [modalOpen, setModalOpen] = useState(false);
+	const [modalId, setModalId] = useState<string>(undefined);
 	const handleOpen = (id: string) => {
 		setModalId(id);
 		setModalOpen(true);

@@ -1,0 +1,11 @@
+{
+	"include": ["./src/**/*.ts"],
+	"exclude": ["**/__tests__/", "tests"],
+	"extends": "../../tsconfig.json",
+	"compilerOptions": {
+		"outDir": "dist/",
+		"allowJs": true,
+		"module": "es2020",
+		"moduleResolution": "node"
+	}
+}

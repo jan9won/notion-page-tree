@@ -18,7 +18,10 @@ import {
 	ListItemAvatar
 } from '@mui/material';
 import { SubTreeEntity } from 'notion-page-tree/dist/types';
+import { useEffect, useState } from 'react';
 import { fetchPageTree } from '../apis/fetchPageTree';
+import { Link } from 'react-router-dom';
+import { convertNotionId } from 'notion-page-tree/src/server/utils/convertNotionId';
 
 const modalStyle = {
 	position: 'fixed' as const,
@@ -46,13 +49,13 @@ const ArticleModal = ({
 	handleClose: () => void;
 	articleId: string;
 }) => {
-	const [articleModal, setArticleModal] = React.useState({} as SubTreeEntity);
+	const [articleModal, setArticleModal] = useState({} as SubTreeEntity);
 	const fetchAndSetArticleModal = async () => {
-		const fetchResult = await fetchPageTree(articleId, 3);
-		// console.log(fetchResult);
+		const fetchResult = await fetchPageTree(articleId, 2);
+		console.log(fetchResult);
 		setArticleModal(fetchResult as SubTreeEntity);
 	};
-	React.useEffect(() => {
+	useEffect(() => {
 		fetchAndSetArticleModal();
 		return () => {
 			//
@@ -67,9 +70,7 @@ const ArticleModal = ({
 			aria-describedby='modal-modal-description'
 			sx={modalStyle}
 		>
-			{articleModal.type === 'page' &&
-			articleModal.metadata.properties['title']?.type === 'title' &&
-			articleModal.metadata.properties['title']?.title ? (
+			{articleModal.type === 'page' ? (
 				<Slide direction='up' in={open}>
 					<Card sx={cardStyle}>
 						<CardHeader
@@ -90,19 +91,20 @@ const ArticleModal = ({
 									)
 								) : (
 									<Avatar>
-										{
-											articleModal.metadata.properties['title'].title.reduce(
-												(acc, richText) => acc + richText.plain_text,
-												''
-											)[0]
-										}
+										{articleModal.metadata.properties['title']?.type ===
+											'title' &&
+											articleModal.metadata.properties['title'].title[0]
+												.plain_text[0]}
 									</Avatar>
 								)
 							}
-							title={articleModal.metadata.properties['title'].title.reduce(
-								(acc, richText) => acc + richText.plain_text,
-								''
-							)}
+							title={
+								articleModal.metadata.properties['title']?.type === 'title' &&
+								articleModal.metadata.properties['title'].title.reduce(
+									(acc, richText) => acc + richText.plain_text,
+									''
+								)
+							}
 						></CardHeader>
 						{articleModal.metadata.properties['description']?.type ===
 						'rich_text' ? (
@@ -120,25 +122,32 @@ const ArticleModal = ({
 						)}
 						{articleModal.children && (
 							<List>
-								{(articleModal.children as SubTreeEntity[]).map(
-									child =>
-										child.type === 'page' &&
-										child.metadata.properties['title']?.type == 'rich_text' && (
-											<ListItem key={child.id}>
-												<ListItemButton>
-													<ListItemAvatar></ListItemAvatar>
-													<ListItemText>
-														{child.metadata.properties[
-															'title'
-														].rich_text.reduce(
-															(acc, richText) => acc + richText.plain_text,
-															''
-														)}
-													</ListItemText>
-												</ListItemButton>
-											</ListItem>
-										)
-								)}
+								{(articleModal.children as SubTreeEntity[]).map(child => (
+									<ListItem key={child.id} id={child.id}>
+										<Link to={`/page/${child.id.split('-').join('')}`}>
+											<ListItemButton>
+												<ListItemText>
+													{child.metadata.object === 'block'
+														? child.metadata.type === 'child_page'
+															? child.metadata.child_page.title
+															: ''
+														: child.metadata.object === 'page'
+														? child.metadata.properties['title'].type ===
+														  'title'
+															? child.metadata.properties['title'].title.reduce(
+																	(acc, richText) => acc + richText.plain_text,
+																	''
+															  )
+															: ''
+														: child.metadata.title.reduce(
+																(acc, richText) => acc + richText.plain_text,
+																''
+														  )}
+												</ListItemText>
+											</ListItemButton>
+										</Link>
+									</ListItem>
+								))}
 							</List>
 						)}
 					</Card>

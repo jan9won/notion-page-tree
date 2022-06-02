@@ -1,32 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import { NotionRenderer } from 'react-notion-x';
-import { NotionAPI } from 'notion-client';
+import { ExtendedRecordMap } from 'notion-types';
+import { fetchRecordMap } from '../apis/fetchRecordMap';
+import { useParams } from 'react-router-dom';
 
-/**
- * @param flatId Notion's page id without hyphen(-).
- */
-interface ArticleProps {
-	flatId: string;
-}
-
-const ArticlePage = ({ flatId }: ArticleProps) => {
-	const [recordMap, setRecordMap] = useState(
-		{} as Awaited<ReturnType<typeof notion.getPage>>
-	);
-	const notion = new NotionAPI();
+const ArticlePage = () => {
+	const params = useParams();
+	const [recordMap, setRecordMap] = useState<ExtendedRecordMap>();
+	const fetchAndSetRecordMap = async () => {
+		const recordMap = await fetchRecordMap(params.id);
+		console.log(recordMap);
+		setRecordMap(recordMap);
+	};
 	useEffect(() => {
-		notion.getPage(flatId).then(value => setRecordMap(value));
+		fetchAndSetRecordMap();
 		return () => {
 			//
 		};
-	}, [recordMap]);
+	}, [params.id]);
 
-	return (
+	return recordMap ? (
 		<NotionRenderer
 			recordMap={recordMap}
 			fullPage={true}
 			darkMode={true}
+			mapPageUrl={pageId => `/page/${pageId}`}
+			disableHeader={true}
 		></NotionRenderer>
+	) : (
+		<div>loading</div>
 	);
 };
 

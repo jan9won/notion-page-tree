@@ -1,0 +1,17 @@
+{
+	"type": "module",
+	"name": "record-map-server",
+	"scripts": {
+		"build": "tsc -p ./tsconfig.json",
+		"serve": "node ./dist/index.js"
+	},
+	"dependencies": {
+		"express": "^4.18.1",
+		"notion-client": "^6.12.9",
+		"notion-types": "^6.12.6",
+		"react-notion-x": "^6.12.10",
+		"ts-node": "^10.8.0"
+	},
+	"exports": "./dist/index.js",
+	"node": ">=14.16"
+}
