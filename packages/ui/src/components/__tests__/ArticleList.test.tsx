@@ -9,10 +9,10 @@ describe('ArticleList', () => {
 			<ArticleList rootId='2345a2ce-3cdd-48f1-83cc-a1f6d1ae25ca'></ArticleList>
 		);
 		const TestArticle = await ArticleListRendered.findByText(
-			'Test Article (with Deeply Nested Children)'
+			'Test Article B1 (with Deeply Nested Children)'
 		);
 		expect(TestArticle.innerHTML).toBe(
-			'Test Article (with Deeply Nested Children)'
+			'Test Article B1 (with Deeply Nested Children)'
 		);
 	});
 });

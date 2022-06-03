@@ -58,7 +58,7 @@ async function use_more_options() {
 			}
 		}
 	});
-	const server = notionPageTree.setupServer({ port: 8888 });
+	const server = notionPageTree.setupServer({ port: 9000 });
 
 	await notionPageTree.parseCachedDocument();
 

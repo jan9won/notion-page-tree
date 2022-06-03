@@ -10,7 +10,8 @@ import {
 	CardContent,
 	CardActions,
 	IconButton,
-	Avatar
+	Avatar,
+	Box
 } from '@mui/material';
 import { Share } from '@mui/icons-material';
 import ArticleModal from './ArticleModal';
@@ -46,7 +47,7 @@ const ArticleList = ({ rootId }: { rootId: string }) => {
 					handleClose={handleClose}
 				></ArticleModal>
 			)}
-			<Stack spacing={2}>
+			<Stack spacing={2} maxWidth='480px' margin={'auto'}>
 				{rootArticleList.map(
 					article =>
 						article.type === 'page' &&

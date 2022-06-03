@@ -15,30 +15,37 @@ import {
 	ListItem,
 	ListItemButton,
 	ListItemText,
-	ListItemAvatar
+	ListItemAvatar,
+	SxProps
 } from '@mui/material';
 import { SubTreeEntity } from 'notion-page-tree/dist/types';
 import { useEffect, useState } from 'react';
 import { fetchPageTree } from '../apis/fetchPageTree';
 import { Link } from 'react-router-dom';
-import { convertNotionId } from 'notion-page-tree/src/server/utils/convertNotionId';
 
 const modalStyle = {
 	position: 'fixed' as const,
-	top: '50%',
-	left: '50%',
-	transform: 'translate(-50%, -50%)',
+	display: 'flex',
+	flexDirection: 'row',
+	justifyContent: 'center',
+	// top: '50%',
+	// left: '50%',
+	// transform: 'translate(-50%, -50%)',
 	width: '100%',
 	height: '100%',
 	border: '2px solid #000'
-};
+} as SxProps;
 
 const cardStyle = {
 	position: 'fixed' as const,
 	bottom: '0',
-	width: '90vw',
-	left: '5vw'
-};
+	width: '100%',
+	maxWidth: '640px'
+	// top: '50%',
+	// left: '50%',
+	// transform: 'translate(-50%, -50%)',
+	// alignSelf: 'flex-end'
+} as SxProps;
 
 const ArticleModal = ({
 	open,
@@ -52,7 +59,6 @@ const ArticleModal = ({
 	const [articleModal, setArticleModal] = useState({} as SubTreeEntity);
 	const fetchAndSetArticleModal = async () => {
 		const fetchResult = await fetchPageTree(articleId, 2);
-		console.log(fetchResult);
 		setArticleModal(fetchResult as SubTreeEntity);
 	};
 	useEffect(() => {
@@ -120,11 +126,14 @@ const ArticleModal = ({
 						) : (
 							<></>
 						)}
-						{articleModal.children && (
+						{articleModal.children && articleModal.children.length > 0 ? (
 							<List>
 								{(articleModal.children as SubTreeEntity[]).map(child => (
 									<ListItem key={child.id} id={child.id}>
-										<Link to={`/page/${child.id.split('-').join('')}`}>
+										<Link
+											to={`/page/${child.id.split('-').join('')}`}
+											style={{ color: 'white', textDecoration: 'none' }}
+										>
 											<ListItemButton>
 												<ListItemText>
 													{child.metadata.object === 'block'
@@ -148,6 +157,27 @@ const ArticleModal = ({
 										</Link>
 									</ListItem>
 								))}
+							</List>
+						) : (
+							<List>
+								<Link
+									to={`/page/${articleModal.id.split('-').join('')}`}
+									style={{ color: 'white', textDecoration: 'none' }}
+								>
+									<ListItemButton>
+										<ListItemText>
+											{articleModal.metadata.properties['title'].type ===
+											'title'
+												? articleModal.metadata.properties[
+														'title'
+												  ].title.reduce(
+														(acc, richText) => acc + richText.plain_text,
+														''
+												  )
+												: ''}
+										</ListItemText>
+									</ListItemButton>
+								</Link>
 							</List>
 						)}
 					</Card>

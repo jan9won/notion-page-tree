@@ -11,7 +11,7 @@ module.exports = merge(config, {
 		static: {
 			directory: path.join(__dirname, 'dist')
 		},
-		port: 9000,
+		port: 9002,
 		host: '0.0.0.0',
 		allowedHosts: 'all',
 		compress: true, // gzip everything served
